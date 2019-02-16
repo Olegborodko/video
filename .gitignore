@@ -61,11 +61,8 @@ typings/
 #IDE config
 .idea
 
-#ssl
-sslcert/
-
 #temp
 temp/
 
-#config sequelize
-config/keys
+#config keys
+config/http_keys

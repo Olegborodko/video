@@ -18,9 +18,11 @@
     "koa-body": "^4.0.8",
     "koa-router": "^7.4.0",
     "koa2-cors": "^2.0.6",
-    "pg": "^7.8.0"
+    "pg": "^7.8.0",
+    "universal-cookie-koa": "^3.0.7"
   },
   "devDependencies": {
+    "eslint": "^5.14.0",
     "nodemon": "^1.18.10"
   }
 }
