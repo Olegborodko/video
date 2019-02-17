@@ -2,20 +2,24 @@ require('dotenv').config();
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-body');
+const logger = require('koa-morgan');
+const usersRoutes = require('./api/users');
 
 const fs = require('fs');
 const https = require('https');
 
 const cookiesMiddleware = require('universal-cookie-koa');
 
-// const prefixPath = '/api';
+const prefixPath = '/api';
 
 const app = new Koa();
 const router = new Router();
 
 app.use(bodyParser());
 app.use(cookiesMiddleware());
+app.use(logger('tiny'));
 
+app.use(usersRoutes());
 app.use(router.routes());
 
 const server = https.createServer({

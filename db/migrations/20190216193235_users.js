@@ -1,7 +1,7 @@
-const { onUpdateTrigger } = require ('../../config/update_at');
+const { onUpdateTrigger } = require('../../config/update_at');
 
-exports.up = function(knex, Promise) {
-    return knex.schema.createTable('users', function (table) {
+exports.up = function (knex, Promise) {
+    return knex.schema.createTable('users', (table) => {
         table.increments();
         table.string('email').notNullable();
         table.string('password').notNullable();
@@ -14,6 +14,6 @@ exports.up = function(knex, Promise) {
     }).then(() => knex.raw(onUpdateTrigger('users')));
 };
 
-exports.down = function(knex, Promise) {
+exports.down = function (knex, Promise) {
     return knex.schema.dropTable('users');
 };
