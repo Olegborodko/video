@@ -3,12 +3,12 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-body');
 const logger = require('koa-morgan');
-const usersRoutes = require('./api/users');
 
 const fs = require('fs');
 const https = require('https');
 
 const cookiesMiddleware = require('universal-cookie-koa');
+const usersRoutes = require('./api/users');
 
 const prefixPath = '/api';
 

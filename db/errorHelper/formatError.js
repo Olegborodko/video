@@ -6,4 +6,4 @@ module.exports = (error) => {
         }
     }
     return 'database error';
-}
+};

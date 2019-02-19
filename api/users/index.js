@@ -6,7 +6,7 @@ const allUsers = require('./all');
 
 const router = combineRouters(
     createUser,
-    allUsers
+    allUsers,
 );
 
 module.exports = router;
