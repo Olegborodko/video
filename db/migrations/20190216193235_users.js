@@ -1,4 +1,4 @@
-const { onUpdateTrigger } = require('../../config/update_at');
+const { onUpdateTrigger } = require('../sqlHelpers/update_at');
 
 exports.up = function (knex, Promise) {
     return knex.schema.createTable('users', (table) => {
