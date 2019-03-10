@@ -1,8 +1,12 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
-module.exports.jwtEncode = (data) => {
-    return jwt.sign({data: data}, process.env.JWT_SECRET);
+module.exports.jwtEncode = (data, time) => {
+    return jwt.sign({
+        data: data
+    }, process.env.JWT_SECRET, {
+        expiresIn: time
+    });
 }
 
 module.exports.jwtDecode = (token) => {

@@ -5,12 +5,14 @@
   "main": "app.js",
   "scripts": {
     "start": "NODE_ENV=development nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test PORT=3001 NODE_TLS_REJECT_UNAUTHORIZED=0 jest --watchAll"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^3.0.4",
+    "cookie-parser": "^1.4.4",
+    "cookies": "^0.7.3",
     "dotenv": "^6.2.0",
     "joi": "^14.3.1",
     "jsonwebtoken": "^8.4.0",
@@ -18,6 +20,7 @@
     "koa": "^2.7.0",
     "koa-body": "^4.0.8",
     "koa-combine-routers": "^4.0.2",
+    "koa-cookie": "^1.0.0",
     "koa-morgan": "^1.0.1",
     "koa-passport": "^4.1.1",
     "koa-router": "^7.4.0",
@@ -25,12 +28,15 @@
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
     "pg": "^7.8.0",
-    "universal-cookie-koa": "^3.0.7"
+    "universal-cookie-koa": "^3.0.7",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "eslint": "^5.14.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "nodemon": "^1.18.10"
+    "jest": "^24.1.0",
+    "nodemon": "^1.18.10",
+    "supertest": "^3.4.2"
   }
 }

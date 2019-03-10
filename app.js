@@ -7,7 +7,9 @@ const logger = require('koa-morgan');
 const fs = require('fs');
 const https = require('https');
 
-const cookiesMiddleware = require('universal-cookie-koa');
+//const cookiesMiddleware = require('universal-cookie-koa');
+//const cookiesMiddleware = require('koa-cookie');
+//const cookiesMiddleware = require('cookie-parser');
 const usersRoutes = require('./api/users');
 
 const prefixPath = '/api';
@@ -16,7 +18,7 @@ const app = new Koa();
 const router = new Router();
 
 app.use(bodyParser());
-app.use(cookiesMiddleware());
+//app.use(cookiesMiddleware());
 app.use(logger('tiny'));
 
 app.use(usersRoutes());

@@ -1,9 +1,16 @@
 module.exports = (error) => {
+    const result = {};
+
     if (error.code == 23505) {
         if (error.constraint) {
             const key = error.constraint.split('_')[1];
-            return `${key} already exists`;
+            if (key) {
+                result[key] = { 0: 'already exists' };
+                return result;
+            }
         }
     }
-    return 'database error';
+
+    result.database = { 0: 'error' };
+    return result;
 };

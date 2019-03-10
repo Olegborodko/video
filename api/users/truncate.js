@@ -3,9 +3,9 @@ const knex = require('../../config/knex');
 const Router = require('koa-router');
 const router = new Router();
 
-router.get('/api/users', async (ctx, next) => {
+router.post('/api/users/truncate', async (ctx, next) => {
 
-    await knex.select('login').from('users').then((data) => {
+    await knex('users').truncate().then((data) => {
             ctx.response.body = data;
             ctx.response.status = 200;
         })

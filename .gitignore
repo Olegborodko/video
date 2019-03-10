@@ -66,3 +66,5 @@ temp/
 
 #config keys
 config/http_keys
+
+wallaby.conf.js

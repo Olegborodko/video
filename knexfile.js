@@ -22,12 +22,12 @@ module.exports = {
         },
     },
 
-    staging: {
+    test: {
         client: 'postgresql',
         connection: {
-            database: 'my_db',
-            user: 'username',
-            password: 'password',
+            database: process.env.TEST_DB,
+            user: process.env.DEV_DB_USER,
+            password: process.env.DEV_DB_PASS,
         },
         pool: {
             min: 2,
@@ -35,6 +35,10 @@ module.exports = {
         },
         migrations: {
             tableName: 'knex_migrations',
+            directory: './db/migrations',
+        },
+        seeds: {
+            directory: './db/seeds',
         },
     },
 
