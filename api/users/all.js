@@ -5,7 +5,7 @@ const router = new Router();
 
 router.get('/api/users', async (ctx, next) => {
 
-    await knex.select('login').from('users').then((data) => {
+    await knex.select('login', 'id').from('users').then((data) => {
             ctx.response.body = data;
             ctx.response.status = 200;
         })

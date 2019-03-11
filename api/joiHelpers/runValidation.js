@@ -1,9 +1,9 @@
 const Joi = require('joi');
 
-module.exports = (requestBody, schema) => {
+module.exports = (object, schema) => {
     let result = {};
 
-    Joi.validate(requestBody, schema, {
+    Joi.validate(object, schema, {
         abortEarly: false, language: { key: '' },
     }, (err, value) => {
         if (err) {

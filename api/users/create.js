@@ -8,13 +8,14 @@ const { jwtEncode } = require('../../config/jwtHelpers/jwt');
 const uuidv4 = require('uuid/v4');
 
 const runValidation = require('../joiHelpers/runValidation');
-const userSchema = require('../joiHelpers/schemes/user');
+const userSchema = require('../joiHelpers/schemes/userCreate');
 
 router.post('/api/users', async (ctx, next) => {
     const { password } = ctx.request.body;
     const { email } = ctx.request.body;
     const { login } = ctx.request.body;
 
+    console.log(ctx.request.body);
     const errors = runValidation(ctx.request.body, userSchema);
 
     if (errors) {
