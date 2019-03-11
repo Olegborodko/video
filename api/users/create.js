@@ -6,14 +6,13 @@ const knex = require('../../config/knex');
 const dbFormatError = require('../../db/errorHelper/formatError');
 const { jwtEncode } = require('../../config/jwtHelpers/jwt');
 const uuidv4 = require('uuid/v4');
+const { bcryptHashPromice, saltRounds } = require('../../config/bcrypt');
 
 const runValidation = require('../joiHelpers/runValidation');
 const userSchema = require('../joiHelpers/schemes/userCreate');
 
 router.post('/api/users', async (ctx, next) => {
-    const { password } = ctx.request.body;
-    const { email } = ctx.request.body;
-    const { login } = ctx.request.body;
+    const { password, email, login } = ctx.request.body;
 
     console.log(ctx.request.body);
     const errors = runValidation(ctx.request.body, userSchema);
@@ -25,10 +24,14 @@ router.post('/api/users', async (ctx, next) => {
         return;
     }
 
+    const passwordProtect = await bcryptHashPromice(password, saltRounds).then((data) => {
+        return data;
+    });
+
     await knex('users').returning('id').insert({
         login,
         email,
-        password,
+        password: passwordProtect,
     })
         .then((data) => {
             const id = data[0];
