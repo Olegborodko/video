@@ -3,6 +3,7 @@ const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-body');
 const logger = require('koa-morgan');
+const jwtMiddleware = require('koa-jwt');
 
 const fs = require('fs');
 const https = require('https');
@@ -18,8 +19,11 @@ const app = new Koa();
 const router = new Router();
 
 app.use(bodyParser());
-//app.use(cookiesMiddleware());
 app.use(logger('tiny'));
+
+app.use(jwtMiddleware({ secret: process.env.JWT_SECRET,
+ cookie: 'token_access'
+}).unless({ path: ['/api/users/truncate','/api/users/create','/api/users/auth']}));
 
 app.use(usersRoutes());
 app.use(router.routes());

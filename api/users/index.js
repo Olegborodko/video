@@ -6,13 +6,15 @@ const allUsers = require('./all');
 const truncateUsers = require('./truncate');
 const userById = require('./user');
 const userLogin = require('./login');
+const userLogout = require('./logout');
 
 const router = combineRouters(
     createUser,
     allUsers,
     truncateUsers,
     userById,
-    userLogin
+    userLogin,
+    userLogout
 );
 
 module.exports = router;

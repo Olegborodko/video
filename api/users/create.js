@@ -11,7 +11,7 @@ const { bcryptHashPromice, saltRounds } = require('../../config/bcrypt');
 const runValidation = require('../joiHelpers/runValidation');
 const userSchema = require('../joiHelpers/schemes/userCreate');
 
-router.post('/api/users', async (ctx, next) => {
+router.post('/api/users/create', async (ctx, next) => {
     const { password, email, login } = ctx.request.body;
 
     console.log(ctx.request.body);
@@ -20,7 +20,7 @@ router.post('/api/users', async (ctx, next) => {
     if (errors) {
         ctx.response.body = { errors };
         ctx.response.status = 400;
-        ctx.cookies.set('token_access', '');
+        //ctx.cookies.set('token_access', '');
         return;
     }
 
@@ -47,7 +47,7 @@ router.post('/api/users', async (ctx, next) => {
             ctx.response.status = 202;
         })
         .catch((error) => {
-            ctx.cookies.set('token_access', '');
+            //ctx.cookies.set('token_access', '');
             ctx.response.body = { errors: dbFormatError(error) };
             ctx.response.status = 400;
         });

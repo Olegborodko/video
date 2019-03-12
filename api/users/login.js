@@ -17,7 +17,7 @@ router.post('/api/users/auth', async (ctx, next) => {
     errors = runValidation(ctx.request.body, schemaUserLogin);
 
     if (errors) {
-    	ctx.cookies.set('token_access', '');
+    	//ctx.cookies.set('token_access', '');
         ctx.response.body = { errors };
         ctx.response.status = 400;
         return;
@@ -50,7 +50,7 @@ router.post('/api/users/auth', async (ctx, next) => {
         }
     }
 
-	ctx.cookies.set('token_access', '');
+	//ctx.cookies.set('token_access', '');
     ctx.response.body = { "errors": "password or email are not correct" }
     ctx.response.status = 404;
 
