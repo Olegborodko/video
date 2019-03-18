@@ -4,8 +4,8 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
 passport.use(new JwtStrategy({
-    secretOrKey: process.env.JWT_SECRET,
-    jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
+  secretOrKey: process.env.JWT_SECRET,
+  jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt'),
 }, ((payload, done) => {
-    done(null, false);
+  done(null, false);
 })));

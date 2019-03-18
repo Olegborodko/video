@@ -7,14 +7,16 @@ const truncateUsers = require('./truncate');
 const userById = require('./user');
 const userLogin = require('./login');
 const userLogout = require('./logout');
+const userRefresh = require('./refresh');
 
 const router = combineRouters(
-    createUser,
-    allUsers,
-    truncateUsers,
-    userById,
-    userLogin,
-    userLogout
+  createUser,
+  allUsers,
+  truncateUsers,
+  userById,
+  userLogin,
+  userLogout,
+  userRefresh,
 );
 
 module.exports = router;

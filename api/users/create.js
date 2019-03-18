@@ -12,45 +12,42 @@ const runValidation = require('../joiHelpers/runValidation');
 const userSchema = require('../joiHelpers/schemes/userCreate');
 
 router.post('/api/users/create', async (ctx, next) => {
-    const { password, email, login } = ctx.request.body;
+  const { password, email, login } = ctx.request.body;
 
-    console.log(ctx.request.body);
-    const errors = runValidation(ctx.request.body, userSchema);
+  const errors = runValidation(ctx.request.body, userSchema);
 
-    if (errors) {
-        ctx.response.body = { errors };
-        ctx.response.status = 400;
-        //ctx.cookies.set('token_access', '');
-        return;
-    }
+  if (errors) {
+    ctx.response.body = { errors };
+    ctx.response.status = 400;
+    return;
+  }
 
-    const passwordProtect = await bcryptHashPromice(password, saltRounds).then((data) => {
-        return data;
-    });
+  const passwordProtect = await bcryptHashPromice(password, saltRounds).then(data => data);
 
-    await knex('users').returning('id').insert({
-        login,
-        email,
-        password: passwordProtect,
+  const token_refresh = jwtEncode(uuidv4(), '0');
+
+  await knex('users').returning('id').insert({
+    login,
+    email,
+    password: passwordProtect,
+    token: token_refresh,
+  })
+    .then((data) => {
+      const id = data[0];
+      const token_access = jwtEncode(id, '30m'); // '30m' , '1ms'
+
+      ctx.cookies.set('token_access', token_access);
+
+      ctx.response.body = {
+        success: 'success',
+        token_refresh,
+      };
+      ctx.response.status = 202;
     })
-        .then((data) => {
-            const id = data[0];
-            const token_access = jwtEncode(id, 30); //30m
-            const token_refresh = jwtEncode(uuidv4(), '30d');
-            //ctx.request.universalCookies.set('jwt', token_access);
-            ctx.cookies.set('token_access', token_access);
-
-            ctx.response.body = {
-                success: 'success',
-                token_refresh: token_refresh
-            };
-            ctx.response.status = 202;
-        })
-        .catch((error) => {
-            //ctx.cookies.set('token_access', '');
-            ctx.response.body = { errors: dbFormatError(error) };
-            ctx.response.status = 400;
-        });
+    .catch((error) => {
+      ctx.response.body = { errors: dbFormatError(error) };
+      ctx.response.status = 400;
+    });
 });
 
 module.exports = router;

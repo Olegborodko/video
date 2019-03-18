@@ -1,5 +1,5 @@
 module.exports = {
-    onUpdateTrigger: table => `
+  onUpdateTrigger: table => `
     CREATE OR REPLACE FUNCTION on_update_timestamp()
           RETURNS trigger AS $$
           BEGIN
