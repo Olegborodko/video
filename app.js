@@ -6,18 +6,39 @@ const logger = require('koa-morgan');
 const jwtMiddleware = require('koa-jwt');
 const errorDB = require('koa-json-error');
 
+const koaSwagger = require('koa2-swagger-ui');
+//const cors = require('koa2-cors');
+const serve = require('koa-static');
+
 const fs = require('fs');
 const https = require('https');
 
-// const cookiesMiddleware = require('universal-cookie-koa');
-// const cookiesMiddleware = require('koa-cookie');
-// const cookiesMiddleware = require('cookie-parser');
 const usersRoutes = require('./api/users');
 
 const prefixPath = '/api';
 
 const app = new Koa();
 const router = new Router();
+
+app.use(serve('./public'));
+
+// app.use(cors({
+//   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+//   maxAge: 5,
+//   credentials: true,
+//   //allowMethods: ['GET', 'POST', 'DELETE'],
+//   allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+// }));
+
+app.use(
+  koaSwagger({
+    routePrefix: '/swagger', // host at /swagger instead of default /docs
+    swaggerOptions: {
+      url: 'https://localhost:3000/openapi.yaml', // example path to json
+      //swaggerJSON: '/openapi.json'
+    },
+  }),
+);
 
 app.use(bodyParser());
 app.use(logger('tiny'));
@@ -37,6 +58,7 @@ app.use(jwtMiddleware({
   path: ['/api/users/truncate',
     '/api/users/create',
     '/api/users/auth',
+    '/public'
   ],
 }));
 
