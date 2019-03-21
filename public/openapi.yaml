@@ -5,7 +5,9 @@ info:
   version: 0.0.1
 servers:
   - url: https://localhost:3000/api
-    description: _
+    description: local
+  - url: https://topvideoplayer.herokuapp.com/api
+    description: remote
     
 # components:
 #   securitySchemes:
