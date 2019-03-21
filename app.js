@@ -10,8 +10,8 @@ const koaSwagger = require('koa2-swagger-ui');
 //const cors = require('koa2-cors');
 const serve = require('koa-static');
 
-const fs = require('fs');
-const https = require('https');
+//const fs = require('fs');
+//const https = require('https');
 
 const usersRoutes = require('./api/users');
 
@@ -64,11 +64,14 @@ app.use(jwtMiddleware({
 app.use(usersRoutes());
 app.use(router.routes());
 
-const server = https.createServer({
-  key: fs.readFileSync('./config/http_keys/privatekey.pem'),
-  cert: fs.readFileSync('./config/http_keys/certificate.pem'),
-  requestCert: false,
-  rejectUnauthorized: false,
-}, app.callback()).listen(process.env.PORT);
+// const server = https.createServer({
+//   key: fs.readFileSync('./config/http_keys/privatekey.pem'),
+//   cert: fs.readFileSync('./config/http_keys/certificate.pem'),
+//   requestCert: false,
+//   rejectUnauthorized: false,
+// }, app.callback()).listen(process.env.PORT);
+// module.exports = server;
 
-module.exports = server;
+app.listen(process.env.PORT);
+
+module.exports = app;
