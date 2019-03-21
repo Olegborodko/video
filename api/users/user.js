@@ -14,7 +14,7 @@ router.get('/api/users/:id', async (ctx, next) => {
 
   if (errors) {
     ctx.response.body = { errors };
-    ctx.response.status = 400;
+    ctx.response.status = 404;
     return;
   }
 
@@ -23,7 +23,7 @@ router.get('/api/users/:id', async (ctx, next) => {
       ctx.response.body = data;
       ctx.response.status = 200;
     } else {
-      ctx.response.status = 404;
+      ctx.response.status = 400;
     }
   });
 });

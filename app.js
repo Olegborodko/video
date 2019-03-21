@@ -57,8 +57,7 @@ app.use(jwtMiddleware({
 }).unless({
   path: ['/api/users/truncate',
     '/api/users/create',
-    '/api/users/auth',
-    '/public'
+    '/api/users/auth'
   ],
 }));
 

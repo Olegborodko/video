@@ -1,22 +1,172 @@
 openapi: 3.0.0
 info:
   title: VideoPlayer API
-  description: think well
-  version: 0.1.0
+  description: _
+  version: 0.0.1
 servers:
   - url: https://localhost:3000/api
-    description: local
+    description: _
+    
+# components:
+#   securitySchemes:
+#     cookieAuth:         # arbitrary name for the security scheme; will be used in the "security" key later
+#       type: apiKey
+#       in: cookie
+#       name: JSESSIONID  # cookie name
+
+
 paths:
-  /users:
-    get:
-      summary: Returns a list of users.
-      description: ..
+  /users/create:
+    post:
+      summary: User create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                login:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
       responses:
-        '200':    # status code
-          description: ..
+        '202':
+          description: success
           content:
             application/json:
-              schema: 
-                type: array
-                items: 
+              schema:
+                type: object
+                properties:
+                  success:
+                    example: "success"
+                  token_refresh:
+                    type: string
+                    example: eyJhb
+        '400':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      login: 
+                        type: object
+                      password:
+                        type: object
+                      email:
+                        type: object
+  
+  /users/auth:
+    post:
+      summary: User login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
                   type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    example: "success"
+                  token_refresh:
+                    type: string
+                    example: eyJhb
+        '404':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    properties:
+                      password:
+                        type: object
+                      email:
+                        type: object
+        '400':
+          description: errors db
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: password or email are not correct
+  
+  /users/logout:
+    post:
+      summary: User logout
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    example: "logout"
+        '404':
+          description: error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "invalid access"
+  
+  /users/refresh:
+    post:
+      summary: Token refresh
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tokenRefresh:
+                  type: string
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    example: "success"
+                  token_refresh:
+                    type: string
+                    example: eyJhb
+        '403':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "nvalid access"
+  
+  

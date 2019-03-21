@@ -18,7 +18,7 @@ router.post('/api/users/auth', async (ctx, next) => {
 
   if (errors) {
     ctx.response.body = { errors };
-    ctx.response.status = 400;
+    ctx.response.status = 404;
     return;
   }
 
@@ -53,7 +53,7 @@ router.post('/api/users/auth', async (ctx, next) => {
   }
 
   ctx.response.body = { errors: 'password or email are not correct' };
-  ctx.response.status = 404;
+  ctx.response.status = 400;
 });
 
 module.exports = router;
