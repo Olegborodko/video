@@ -34,7 +34,7 @@ app.use(
   koaSwagger({
     routePrefix: '/swagger', // host at /swagger instead of default /docs
     swaggerOptions: {
-      url: 'https://localhost:3000/openapi.yaml', // example path to json
+      url: `https://${process.env.HOST}:${process.env.PORT}/openapi.yaml`, // example path to json
       //swaggerJSON: '/openapi.json'
     },
   }),
