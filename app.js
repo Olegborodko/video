@@ -30,13 +30,17 @@ app.use(serve('./public'));
 //   allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
 // }));
 
+const swaggerOptions = {};
+if (process.env.NODE_ENV=='development') {
+  swaggerOptions.url = `http://${process.env.HOST}:${process.env.PORT}/openapi.yaml`;
+} else {
+  swaggerOptions.url = `https://${process.env.HOST}/openapi.yaml`;
+}
+
 app.use(
   koaSwagger({
     routePrefix: '/swagger', // host at /swagger instead of default /docs
-    swaggerOptions: {
-      url: `https://${process.env.HOST}:${process.env.PORT}/openapi.yaml`, // example path to json
-      //swaggerJSON: '/openapi.json'
-    },
+    swaggerOptions: swaggerOptions,
   }),
 );
 
