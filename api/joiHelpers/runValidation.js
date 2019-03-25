@@ -5,11 +5,11 @@ module.exports = (object, schema) => {
 
   Joi.validate(object, schema, {
     abortEarly: false, language: { key: '' },
-  }, (err, value) => {
+  }, (err) => {
     if (err) {
       let index = 0;
       const obj = {};
-      err.details.forEach((item, i, arr) => {
+      err.details.forEach((item) => {
         if (!obj[item.context.key]) {
           obj[item.context.key] = {};
           index = 0;

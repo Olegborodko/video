@@ -3,7 +3,7 @@ const knex = require('../../config/knex');
 
 const router = new Router();
 
-router.get('/api/users', async (ctx, next) => {
+router.get('/api/users', async (ctx) => {
   await knex.select('login', 'id').from('users').then((data) => {
     ctx.response.body = data;
     ctx.response.status = 200;

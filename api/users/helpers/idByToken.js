@@ -1,10 +1,10 @@
 const { jwtDecode } = require('../../../config/jwtHelpers/jwt');
 
-module.exports = (token_access) => {
-  const tokenData = jwtDecode(token_access);
+module.exports = (tokenAccess) => {
+  const tokenData = jwtDecode(tokenAccess);
 
   if (tokenData) {
     return tokenData.data;
   }
-    	return false;
+  return false;
 };

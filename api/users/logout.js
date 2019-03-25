@@ -1,11 +1,10 @@
 const Router = require('koa-router');
 
 const router = new Router();
-const { jwtDecode } = require('../../config/jwtHelpers/jwt');
 const knex = require('../../config/knex');
 const currentUserId = require('./helpers/idByToken.js');
 
-router.post('/api/users/logout', async (ctx, next) => {
+router.post('/api/users/logout', async (ctx) => {
   const userId = currentUserId(ctx.cookies.get('token_access'));
 
   if (userId) {

@@ -10,24 +10,22 @@ const koaSwagger = require('koa2-swagger-ui');
 const cors = require('koa2-cors');
 const serve = require('koa-static');
 
-//const fs = require('fs');
-//const https = require('https');
+// const fs = require('fs');
+// const https = require('https');
 
 const usersRoutes = require('./api/users');
-
-const prefixPath = '/api';
 
 const app = new Koa();
 const router = new Router();
 
 app.use(cors({
-  origin: '*'
+  origin: '*',
 }));
 
 app.use(serve('./public'));
 
 const swaggerOptions = {};
-if (process.env.NODE_ENV=='development') {
+if (process.env.NODE_ENV === 'development') {
   swaggerOptions.url = `http://${process.env.HOST}:${process.env.PORT}/openapi.yaml`;
 } else {
   swaggerOptions.url = `https://${process.env.HOST}/openapi.yaml`;
@@ -36,7 +34,7 @@ if (process.env.NODE_ENV=='development') {
 app.use(
   koaSwagger({
     routePrefix: '/swagger', // host at /swagger instead of default /docs
-    swaggerOptions: swaggerOptions,
+    swaggerOptions,
   }),
 );
 
@@ -57,7 +55,7 @@ app.use(jwtMiddleware({
 }).unless({
   path: ['/api/users/truncate',
     '/api/users/create',
-    '/api/users/auth'
+    '/api/users/auth',
   ],
 }));
 

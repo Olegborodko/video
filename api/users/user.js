@@ -2,12 +2,11 @@
 const Router = require('koa-router');
 
 const router = new Router();
-const Joi = require('joi');
 const knex = require('../../config/knex');
 const userId = require('../joiHelpers/schemes/userId');
 const runValidation = require('../joiHelpers/runValidation');
 
-router.get('/api/users/:id', async (ctx, next) => {
+router.get('/api/users/:id', async (ctx) => {
   const { id } = ctx.params;
 
   const errors = runValidation({ id }, userId);

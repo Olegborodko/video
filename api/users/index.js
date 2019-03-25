@@ -1,4 +1,3 @@
-const Router = require('koa-router');
 const combineRouters = require('koa-combine-routers');
 
 const createUser = require('./create');
