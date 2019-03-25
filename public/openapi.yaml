@@ -27,7 +27,7 @@ paths:
             schema:
               type: object
               properties:
-                login:
+                name:
                   type: string
                 email:
                   type: string
@@ -56,7 +56,7 @@ paths:
                   errors:
                     type: object
                     properties:
-                      login: 
+                      name: 
                         type: object
                       password:
                         type: object
