@@ -21,12 +21,7 @@ const app = new Koa();
 const router = new Router();
 
 app.use(cors({
-  origin: '*',
-  exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-  maxAge: 5,
-  credentials: true,
-  //allowMethods: ['GET', 'POST', 'DELETE'],
-  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  origin: '*'
 }));
 
 app.use(serve('./public'));
