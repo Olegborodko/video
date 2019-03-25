@@ -11,7 +11,7 @@ const runValidation = require('../joiHelpers/runValidation');
 const userSchema = require('../joiHelpers/schemes/userCreate');
 
 router.post('/api/users/create', async (ctx) => {
-  const { password, email, login } = ctx.request.body;
+  const { password, email, name } = ctx.request.body;
 
   const errors = runValidation(ctx.request.body, userSchema);
 
@@ -26,7 +26,7 @@ router.post('/api/users/create', async (ctx) => {
   const tokenRefresh = jwtEncode(uuidv4(), '0');
 
   await knex('users').returning('id').insert({
-    login,
+    name,
     email,
     password: passwordProtect,
     token: tokenRefresh,

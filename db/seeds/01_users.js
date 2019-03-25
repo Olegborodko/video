@@ -5,13 +5,13 @@ exports.seed = knex => knex('users').del()
     {
       email: '1@gmail.com',
       password: bcryptHashSync('123'),
-      login: '1',
+      name: '1',
       night_mode: true,
     },
     {
       email: '2@gmail.com',
       password: bcryptHashSync('123'),
-      login: '2',
+      name: '2',
       night_mode: false,
     },
   ]));
