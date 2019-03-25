@@ -7,7 +7,7 @@ const jwtMiddleware = require('koa-jwt');
 const errorDB = require('koa-json-error');
 
 const koaSwagger = require('koa2-swagger-ui');
-//const cors = require('koa2-cors');
+const cors = require('koa2-cors');
 const serve = require('koa-static');
 
 //const fs = require('fs');
@@ -20,15 +20,16 @@ const prefixPath = '/api';
 const app = new Koa();
 const router = new Router();
 
-app.use(serve('./public'));
+app.use(cors({
+  origin: '*',
+  exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
+  maxAge: 5,
+  credentials: true,
+  //allowMethods: ['GET', 'POST', 'DELETE'],
+  allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
+}));
 
-// app.use(cors({
-//   exposeHeaders: ['WWW-Authenticate', 'Server-Authorization'],
-//   maxAge: 5,
-//   credentials: true,
-//   //allowMethods: ['GET', 'POST', 'DELETE'],
-//   allowHeaders: ['Content-Type', 'Authorization', 'Accept'],
-// }));
+app.use(serve('./public'));
 
 const swaggerOptions = {};
 if (process.env.NODE_ENV=='development') {
