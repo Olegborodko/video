@@ -14,6 +14,7 @@ const serve = require('koa-static');
 // const https = require('https');
 
 const usersRoutes = require('./api/users');
+const videoRoutes = require('./api/video');
 
 const app = new Koa();
 const router = new Router();
@@ -56,10 +57,12 @@ app.use(jwtMiddleware({
   path: ['/api/users/truncate',
     '/api/users/create',
     '/api/users/auth',
+    '/api/video/getSubtitres',
   ],
 }));
 
 app.use(usersRoutes());
+app.use(videoRoutes());
 app.use(router.routes());
 
 // const server = https.createServer({
