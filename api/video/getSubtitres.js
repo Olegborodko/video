@@ -14,12 +14,13 @@ router.post('/api/video/getSubtitres', async (ctx) => {
 
   if (errors) {
     ctx.response.body = { errors };
-    ctx.response.status = 400;
+    ctx.response.status = 404;
     return;
   }
 
-  const { id } = getVideoId(link);
+  ctx.response.body = { errors: 'Can not find video in youtube' };
 
+  const { id } = getVideoId(link);
   if (id) {
     const requestXML = await requestPromise(`http://video.google.com/timedtext?lang=en&v=${id}`)
       .then(data => data)
@@ -34,7 +35,7 @@ router.post('/api/video/getSubtitres', async (ctx) => {
       return;
     }
   } else {
-    ctx.response.body = { errors: 'Subtitres not found' };
+    ctx.response.body = { errors: 'English subtitres is not found' };
   }
 
   ctx.response.status = 400;

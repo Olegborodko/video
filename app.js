@@ -58,6 +58,7 @@ app.use(jwtMiddleware({
     '/api/users/create',
     '/api/users/auth',
     '/api/video/getSubtitres',
+    '/api/video/getInfo',
   ],
 }));
 
