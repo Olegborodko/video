@@ -8,18 +8,19 @@ servers:
     description: local
   - url: https://topvideoplayer.herokuapp.com/api
     description: remote
-    
-# components:
-#   securitySchemes:
-#     cookieAuth:         # arbitrary name for the security scheme; will be used in the "security" key later
-#       type: apiKey
-#       in: cookie
-#       name: JSESSIONID  # cookie name
 
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token_access 
 
 paths:
   /users/create:
     post:
+      tags:
+        - users
       summary: User create
       requestBody:
         content:
@@ -65,6 +66,8 @@ paths:
   
   /users/auth:
     post:
+      tags:
+        - users
       summary: User login
       requestBody:
         content:
@@ -116,6 +119,10 @@ paths:
   
   /users/logout:
     post:
+      tags:
+        - users
+      security:
+        - cookieAuth: []
       summary: User logout
       responses:
         '200':
@@ -139,6 +146,10 @@ paths:
   
   /users/refresh:
     post:
+      tags:
+        - users
+      security:
+        - cookieAuth: []
       summary: Token refresh
       requestBody:
         content:
