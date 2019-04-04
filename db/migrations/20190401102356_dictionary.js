@@ -7,6 +7,8 @@ exports.up = function(knex) {
     table.string('ru').notNullable();
     table.integer('counter');
     table.timestamps(false, true);
+
+    table.unique('en');
   }).then(() => knex.raw(onUpdateTrigger('dictionary')));
 };
 
