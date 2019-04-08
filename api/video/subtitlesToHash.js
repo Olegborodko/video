@@ -54,7 +54,7 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
   };
 
   ctx.response.body = {
-    dd: wordsObject
+    words: wordsObject
   };
   
   ctx.response.status = 200;

@@ -9,12 +9,12 @@ servers:
   - url: https://topvideoplayer.herokuapp.com/api
     description: remote
 
-components:
-  securitySchemes:
-    cookieAuth:
-      type: apiKey
-      in: cookie
-      name: token_access 
+# components:
+#   securitySchemes:
+#     cookieAuth:
+#       type: apiKey
+#       in: cookie
+#       name: token_access 
 
 paths:
   /users/create:
@@ -37,6 +37,11 @@ paths:
       responses:
         '202':
           description: success
+          # headers: 
+          #   Set-Cookie:
+          #     schema: 
+          #       type: string
+          #       example: JSESSIONID=abcde12345; Path=/; HttpOnly
           content:
             application/json:
               schema:
@@ -180,6 +185,153 @@ paths:
                 type: object
                 properties:
                   errors:
-                    example: "nvalid access"
+                    example: "invalid access"
+                    
+  /video/getInfo:
+    post:
+      tags:
+       - video
+      summary: get information
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                link:
+                  type: string
+                  example: https://www.youtube.com/watch?v=qANA6POtuFo
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    example: "qANA6POtuFo"
+                  title:
+                    type: string
+                    example: "How to Download YouTube Subtitles as Text"
+                  description:
+                    type: string
+                    example: "In this video ..."
+                  thumbnails:
+                    type: string
+                    example: "https://i.ytimg.com/vi/qANA6POtuFo/mqdefault.jpg"
+                  
+        '400':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "Can not find video in youtube"
+        '403':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "..."
+                    
+  /video/subtitlesToHash:
+    post:
+      tags:
+       - video
+      summary: get words and transcription
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                subtitles:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      text:
+                        type: string
+              example: {
+               "subtitles": [
+            {
+                "text": "Hello,   and &#39;thank&#39; you for, joining me for this\ntutorial."
+            },
+            {
+                "text": "My name is David from freelancerinsights.com."
+            },
+            {
+                "text": "In this video I will show you how to download\nsubtitles as text from YouTube."
+            },
+            {
+               
+                "text": "If you&#39;re pondering why you need to download\ntexts or subtitles from YouTube, it&#39;s probably"
+            },
+            {
+                "start": "19.77",
+                "dur": "5.11",
+                "text": "because maybe you have a video on YouTube\nthat is captioned and all you need is a transcript"
+            },
+            {
+               
+                "text": "for your own purposes, maybe to write a blog\npost or something of the sort."
+            },
+            {
+               
+                "text": "Number two, maybe you&#39;re a freelancer and\nyou just landed a contract or a job only to"
+            },
+            {
+                
+                "text": "realize the video already has captions."
+            },
+            {
+                
+                "text": "There is an advantage for doing this is that\nit makes work easier."
+            },
+            {
+               
+                "text": "The few disadvantages that are available is\nthat the text is not punctuated when you download"
+            },
+            {
+               
+                "text": "it from YouTube and number two, if the video\nwas auto-captioned by YouTube you need to"
+            }]
+              }
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  words:
+                    type: object
+                    properties: 
+                      word:
+                        type: string
+                      word2:
+                        type: boolean
+                        example: false
+                      word3:
+                        type: string
+        '500':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "something is wrong"
+                      
+                  
+                  
   
   

@@ -14,7 +14,7 @@ router.post('/api/video/getSubtitres', async (ctx) => {
 
   if (errors) {
     ctx.response.body = { errors };
-    ctx.response.status = 404;
+    ctx.response.status = 403;
     return;
   }
 
