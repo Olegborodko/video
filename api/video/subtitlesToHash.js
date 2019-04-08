@@ -2,6 +2,7 @@ const Router = require('koa-router');
 
 const router = new Router();
 const requestPromise = require('request-promise');
+const knex = require('../../config/knex');
 
 const subtitlesSchema = require('../joiHelpers/schemes/subtitles');
 const runValidation = require('../joiHelpers/runValidation');
@@ -18,31 +19,45 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
   }
 
   let wordsObject = {};
-  subtitles.forEach(function(item, i, arr) {
-    let text = item.text.toLowerCase();
-    text = text.replace(/&#39;/g, "\'");
-    text = text.replace(/[,\.]/g, "");
-    text = text.replace(/\n/g, " ");
-    //console.log(text);
-    let arrayWords = text.split(" ");
 
-    arrayWords.forEach(function(item) {
-      wordsObject[item] = false;
-    });
-  });
+  function wordCheck(item) {
+    const step1 = item.match(/([a-z].*[a-z])|[a-z]/g);
 
-    
+    if (step1) {
+      const step2 = step1[0].match(/(^[a-z]+\-[a-z]+$)|(^[a-z]+(&#39;)[a-z]+$)|(^[a-z]+[a-z]$)|(^[a-z]$)/g);
+      if (step2) {
+        return step2[0];
+      }
+    }
+    return false; 
+  }
 
-  //     ctx.response.body = {
-  //       id: dataObject.items[0].id,
-  //       title: dataObject.items[0].snippet.title,
-  //       description: dataObject.items[0].snippet.description,
-  //       thumbnails: dataObject.items[0].snippet.thumbnails.medium.url
-  //     };
-  //     ctx.response.status = 200;
- 
-  // ctx.response.body = { errors: 'Can not get video information' };
-  // ctx.response.status = 400;
+  for (let value of subtitles) {
+    let value1 = value.text.toLowerCase();
+    let arrayWords = value1.split(/[\s,]+/);
+
+    for (let item of arrayWords) {
+      const correctWord = wordCheck(item);
+      if (correctWord && !wordsObject[correctWord]){     
+            wordsObject[correctWord] = true;
+            await knex('dictionary').where('en', correctWord).then((data) => {
+              if (data.length > 0) {
+                //console.log(`${data[0].en} -- ${data[0].ru}`);
+                wordsObject[correctWord] = data[0].ru;
+              } else {
+
+              }
+            });  
+      }
+
+    }
+  };
+
+  ctx.response.body = {
+    dd: wordsObject
+  };
+  
+  ctx.response.status = 200;
 });
 
 module.exports = router;
