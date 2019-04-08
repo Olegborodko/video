@@ -9,7 +9,7 @@ const subtitlesToHash = require('./subtitlesToHash');
 const router = combineRouters(
   getSubtitres,
   getInfo,
-  subtitlesToHash
+  subtitlesToHash,
   // save,
   // remove
 );

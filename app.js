@@ -59,7 +59,7 @@ app.use(jwtMiddleware({
     '/api/users/auth',
     '/api/video/getSubtitres',
     '/api/video/getInfo',
-    '/api/video/subtitlesToHash'
+    '/api/video/subtitlesToHash',
   ],
 }));
 

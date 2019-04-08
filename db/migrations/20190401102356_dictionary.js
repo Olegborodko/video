@@ -1,6 +1,6 @@
 const { onUpdateTrigger } = require('../sqlHelpers/update_at');
 
-exports.up = function(knex) {
+exports.up = function (knex) {
   return knex.schema.createTable('dictionary', (table) => {
     table.increments();
     table.string('en').notNullable();
@@ -12,6 +12,6 @@ exports.up = function(knex) {
   }).then(() => knex.raw(onUpdateTrigger('dictionary')));
 };
 
-exports.down = function(knex, Promise) {
-	return knex.schema.dropTable('dictionary');
+exports.down = function (knex, Promise) {
+  return knex.schema.dropTable('dictionary');
 };

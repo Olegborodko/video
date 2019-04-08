@@ -31,7 +31,7 @@ router.post('/api/video/getInfo', async (ctx) => {
         id: dataObject.items[0].id,
         title: dataObject.items[0].snippet.title,
         description: dataObject.items[0].snippet.description,
-        thumbnails: dataObject.items[0].snippet.thumbnails.medium.url
+        thumbnails: dataObject.items[0].snippet.thumbnails.medium.url,
       };
       ctx.response.status = 200;
       return;
