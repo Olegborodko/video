@@ -19,12 +19,17 @@ router.post('/api/video/getInfo', async (ctx) => {
   }
 
   const { id } = getVideoId(link);
+
   if (id) {
     const videoData = await requestPromise(`https://www.googleapis.com/youtube/v3/videos?id=${id}&part=snippet&key=${process.env.YOUTUBE_KEY}`)
       .then(data => data)
       .catch(() => false);
 
-    if (videoData) {
+    const dataObject = JSON.parse(videoData);
+
+    if (dataObject.hasOwnProperty('items') && 
+        dataObject.items.length > 0 && 
+        dataObject.items[0].hasOwnProperty('id')) {
       const dataObject = JSON.parse(videoData);
 
       ctx.response.body = {

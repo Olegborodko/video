@@ -1,8 +1,10 @@
+require('dotenv').config();
 const Router = require('koa-router');
 
 const router = new Router();
 const requestPromise = require('request-promise');
 const knex = require('../../config/knex');
+const translateApi = require('./helpers/translateApi');
 
 const subtitlesSchema = require('../joiHelpers/schemes/subtitles');
 const runValidation = require('../joiHelpers/runValidation');
@@ -18,7 +20,16 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
     return;
   }
 
-  const wordsObject = {};
+  let tokenLingvo = await translateApi.getTokenFromDb();
+
+  if (!tokenLingvo) {
+    tokenLingvo = await translateApi.getTokenFromLingvo();
+    
+    if (tokenLingvo) {
+      await translateApi.setTokenToDb(tokenLingvo);
+    }
+  }
+
 
   function wordCheck(item) {
     const step1 = item.match(/([a-z].*[a-z])|[a-z]/g);
@@ -31,6 +42,8 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
     }
     return false;
   }
+
+  const wordsObject = {};
 
   for (const value of subtitles) {
     const value1 = value.text.toLowerCase();
@@ -45,7 +58,8 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
             // console.log(`${data[0].en} -- ${data[0].ru}`);
             wordsObject[correctWord] = data[0].ru;
           } else {
-
+            // translate and save to db
+            
           }
         });
       }
