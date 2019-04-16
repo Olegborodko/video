@@ -15,6 +15,7 @@ const serve = require('koa-static');
 
 const usersRoutes = require('./api/users');
 const videoRoutes = require('./api/video');
+const adminRoutes = require('./api/admin');
 
 const app = new Koa();
 const router = new Router();
@@ -65,6 +66,7 @@ app.use(jwtMiddleware({
 
 app.use(usersRoutes());
 app.use(videoRoutes());
+app.use(adminRoutes());
 app.use(router.routes());
 
 // const server = https.createServer({

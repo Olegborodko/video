@@ -6,6 +6,7 @@ async function getTokenFromLingvo() {
   const options = {
     uri: 'https://developers.lingvolive.com/api/v1.1/authenticate',
     method: 'POST',
+    resolveWithFullResponse: true,
     body: {
       "mode": "formdata",
       "formdata": []
@@ -15,12 +16,18 @@ async function getTokenFromLingvo() {
     },
     json: true
   };
-  return await requestPromise(options).catch(() => false);
+  return await requestPromise(options).then((data) => {
+    if (data.statusCode === 200) {
+      return data.body;
+    } else {
+      return false;
+    }
+  });
 };
 
 async function translate(token, text) {
   const options = {
-    uri: '{{apiUrl}}/api/v1/Minicard',
+    uri: 'https://developers.lingvolive.com/api/v1/Minicard',
     method: 'GET',
     qs: {
       text: text,
@@ -34,13 +41,17 @@ async function translate(token, text) {
   };
   return await requestPromise(options).then((data) => 
     {
-      return data.Translation.Translation 
-    }).catch(() => false);
+      if (data && data.Translation && data.Translation.Translation) {
+        return data.Translation.Translation
+      } else {
+        return false;
+      }
+    });
 };
 
 async function getTokenFromDb() {
     return await knex('options').where('key', 'tokenLingvo').then((data) => {
-    if (data.length > 0) {
+    if (data.length > 0 && data[0].hasOwnProperty('value')) {
       return data[0].value;
     } else {
       return false;
@@ -61,7 +72,8 @@ async function tokenRefreshDb(token) {
   });
 }
 
-module.exports.getTokenLingvo = getTokenFromLingvo;
+module.exports.getTokenFromLingvo = getTokenFromLingvo;
 module.exports.translate = translate;
 module.exports.getTokenFromDb = getTokenFromDb;
 module.exports.setTokenToDb = setTokenToDb;
+module.exports.tokenRefreshDb = tokenRefreshDb;

@@ -4,7 +4,6 @@ const Router = require('koa-router');
 const router = new Router();
 const requestPromise = require('request-promise');
 const knex = require('../../config/knex');
-const translateApi = require('./helpers/translateApi');
 
 const subtitlesSchema = require('../joiHelpers/schemes/subtitles');
 const runValidation = require('../joiHelpers/runValidation');
@@ -19,17 +18,6 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
     ctx.response.status = 404;
     return;
   }
-
-  let tokenLingvo = await translateApi.getTokenFromDb();
-
-  if (!tokenLingvo) {
-    tokenLingvo = await translateApi.getTokenFromLingvo();
-    
-    if (tokenLingvo) {
-      await translateApi.setTokenToDb(tokenLingvo);
-    }
-  }
-
 
   function wordCheck(item) {
     const step1 = item.match(/([a-z].*[a-z])|[a-z]/g);
@@ -57,10 +45,7 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
           if (data.length > 0) {
             // console.log(`${data[0].en} -- ${data[0].ru}`);
             wordsObject[correctWord] = data[0].ru;
-          } else {
-            // translate and save to db
-            
-          }
+          } 
         });
       }
     }
