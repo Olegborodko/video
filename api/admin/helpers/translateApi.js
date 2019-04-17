@@ -29,6 +29,7 @@ async function translate(token, text) {
   const options = {
     uri: 'https://developers.lingvolive.com/api/v1/Minicard',
     method: 'GET',
+    simple: false,
     qs: {
       text: text,
       srcLang: 1033,

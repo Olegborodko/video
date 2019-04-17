@@ -25,7 +25,7 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
     if (step1) {
       const step2 = step1[0].match(/(^[a-z]+\-[a-z]+$)|(^[a-z]+(&#39;)[a-z]+$)|(^[a-z]+[a-z]$)|(^[a-z]$)/g);
       if (step2) {
-        return step2[0];
+        return step2[0].replace(/&#39;/g, "'");
       }
     }
     return false;

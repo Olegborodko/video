@@ -12,7 +12,7 @@ const runValidation = require('../joiHelpers/runValidation');
 const currentUserIsAdmin = require('./helpers/ifAdmin');
 
 router.post('/api/admin/wordsToDb', async (ctx) => {
-  if (! await currentUserIsAdmin(ctx.cookies.get('token_access'))) {
+  if (!await currentUserIsAdmin(ctx.cookies.get('token_access'))) {
     ctx.response.body = { errors: "Access not allowed" };
     ctx.response.status = 401;
     return;
@@ -28,12 +28,6 @@ router.post('/api/admin/wordsToDb', async (ctx) => {
     return;
   }
 
-  // const test = await translateApi.getTokenFromLingvo();
-  // const translate1 = await translateApi.translate(test, 'hello');
-  // ctx.response.body = { test: translate1 }
-  // ctx.response.status = 200;
-  // return;
-
   async function refreshToken() {
     newToken = await translateApi.getTokenFromLingvo();
     if (newToken) {
@@ -44,17 +38,31 @@ router.post('/api/admin/wordsToDb', async (ctx) => {
   }
 
   async function testToken(token) {
-    const russianWord = await translateApi.translate(token, 'hello');
+    const russianWord = await translateApi.translate(token, 'a');
     if (russianWord) {
       return token;
     }
-    
+
     const newToken = await refreshToken();
     if (newToken) {
       return newToken;
     }
 
     return false;
+  }
+
+  async function saveWordToDb(dataForInsert) {
+    return await knex('dictionary').insert(
+      dataForInsert
+    ).then(() => {
+      return true;
+    }).catch((error) => {
+      //dublicate key en word
+      if (error.code === '23505') {
+        return true;
+      }
+      return false;
+    });
   }
 
 
@@ -84,20 +92,21 @@ router.post('/api/admin/wordsToDb', async (ctx) => {
       const russianWord = await translateApi.translate(token, key);
       if (russianWord) {
         wordsObject[key] = russianWord;
+        //save to db
+        const data = {
+          en: key,
+          ru: russianWord,
+          counter: 1
+        };
+        if (!await saveWordToDb(data)) {
+          ctx.response.body = { errors: "Error insert to database dictionary" }
+          ctx.response.status = 400;
+          return;
+        }
       }
-
-      //save to db
     } else {
       wordsObject[key] = words[key];
     }
-    
-    //console.log(value);
-        // await knex('dictionary').where('en', correctWord).then((data) => {
-        //   if (data.length > 0) {
-        //     // console.log(`${data[0].en} -- ${data[0].ru}`);
-        //     wordsObject[correctWord] = data[0].ru;
-        //   } 
-        // });
   }
 
   ctx.response.body = {
