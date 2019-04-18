@@ -12,6 +12,9 @@
   },
   "author": "borodkoleg@gmail.com",
   "license": "ISC",
+  "nodemonConfig": {
+    "ignore": ["api/test/*", "db/tokenLingvo.js"]
+  },
   "dependencies": {
     "bcrypt": "^3.0.4",
     "dotenv": "^6.2.0",

@@ -68,3 +68,5 @@ temp/
 config/http_keys
 
 wallaby.conf.js
+
+db/tokenLingvo.js

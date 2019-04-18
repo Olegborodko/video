@@ -28,11 +28,11 @@ router.post('/api/admin/wordsToDb', async (ctx) => {
     return;
   }
 
-  let token = await translateApi.getTokenFromDb();
+  let token = translateApi.getTokenFromFile();
 
   if (!token) {
     token = await translateApi.refreshToken();
-
+ 
     if (!token) {
       ctx.response.body = { "errors": "Error access to Lingvo" };
       ctx.response.status = 401;
@@ -41,6 +41,7 @@ router.post('/api/admin/wordsToDb', async (ctx) => {
   }
 
   token = await translateApi.testTranslate(token);
+
   if (!token) {
     ctx.response.body = { "errors": "Error access to Lingvo" };
     ctx.response.status = 401;

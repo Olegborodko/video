@@ -1,12 +1,13 @@
 require('dotenv').config();
 const request = require('supertest');
 const knex = require('../../../config/knex');
+const fs = require('fs');
 
 const server = require('../../../app');
 const translateApi = require('../../admin/helpers/translateApi');
 
 beforeAll(async () => {
-  await knex('options').truncate();
+	fs.writeFileSync("./db/tokenLingvo.js", "");
   await knex('dictionary').truncate();
 });
 
@@ -36,13 +37,13 @@ describe('/api/admin/wordsToDb', () => {
 
     expect(response.status).toEqual(401);
 
-    const token = await translateApi.getTokenFromDb();
+    const token = translateApi.getTokenFromFile();
     expect(token).toBeFalsy();
 
     expect(response.body).toHaveProperty("errors");
   });
 
-  test('create token in db', async () => {
+  test('create token in file', async () => {
     const cookie = await loginHowAdmin();
 
     const response = await request(server).post('/api/admin/wordsToDb')
@@ -56,7 +57,7 @@ describe('/api/admin/wordsToDb', () => {
 
     expect(response.status).toEqual(200);
 
-    const token = await translateApi.getTokenFromDb();
+    const token = translateApi.getTokenFromFile();
     expect(token).toBeTruthy();
 
   });

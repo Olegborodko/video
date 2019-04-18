@@ -1,4 +1,5 @@
 require('dotenv').config();
+const fs = require('fs');
 const requestPromise = require('request-promise');
 const knex = require('../../../config/knex');
 
@@ -49,33 +50,22 @@ async function translate(token, text) {
   });
 };
 
-async function getTokenFromDb() {
-  return await knex('options').where('key', 'tokenLingvo').then((data) => {
-    if (data.length > 0 && data[0].hasOwnProperty('value')) {
-      return data[0].value;
-    } else {
-      return false;
-    }
-  });
+function getTokenFromFile() {
+  const result = fs.readFileSync('./db/tokenLingvo.js', { encoding: 'utf-8' });
+  if (result.length > 0){
+    return result;  
+  }
+  return false;
 }
 
-async function setTokenToDb(token) {
-  return await knex('options').returning('id').insert({
-    value: token,
-    key: 'tokenLingvo'
-  })
+function setTokenToFile(token) {
+  fs.writeFileSync("./db/tokenLingvo.js", token);
 }
-
-// async function tokenRefreshDb(token) {
-//   return await knex('options').where('key', 'tokenLingvo').update({
-//     value: token
-//   });
-// }
 
 async function refreshToken() {
-  newToken = await getTokenFromLingvo();
+  const newToken = await getTokenFromLingvo();
   if (newToken) {
-    await setTokenToDb(newToken);
+    setTokenToFile(newToken);
     return newToken;
   }
   return false;
@@ -111,8 +101,8 @@ async function saveWordToDb(dataForInsert) {
 
 module.exports.getTokenFromLingvo = getTokenFromLingvo;
 module.exports.translate = translate;
-module.exports.getTokenFromDb = getTokenFromDb;
-module.exports.setTokenToDb = setTokenToDb;
+module.exports.getTokenFromFile = getTokenFromFile;
+module.exports.setTokenToFile = setTokenToFile;
 module.exports.saveWordToDb = saveWordToDb;
 module.exports.testTranslate = testTranslate;
 module.exports.refreshToken = refreshToken;
