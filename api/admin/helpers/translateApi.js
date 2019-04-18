@@ -40,18 +40,17 @@ async function translate(token, text) {
     },
     json: true
   };
-  return await requestPromise(options).then((data) => 
-    {
-      if (data && data.Translation && data.Translation.Translation) {
-        return data.Translation.Translation
-      } else {
-        return false;
-      }
-    });
+  return await requestPromise(options).then((data) => {
+    if (data && data.Translation && data.Translation.Translation) {
+      return data.Translation.Translation
+    } else {
+      return false;
+    }
+  });
 };
 
 async function getTokenFromDb() {
-    return await knex('options').where('key', 'tokenLingvo').then((data) => {
+  return await knex('options').where('key', 'tokenLingvo').then((data) => {
     if (data.length > 0 && data[0].hasOwnProperty('value')) {
       return data[0].value;
     } else {
@@ -67,9 +66,46 @@ async function setTokenToDb(token) {
   })
 }
 
-async function tokenRefreshDb(token) {
-  return await knex('options').where('key', 'tokenLingvo').update({
-    value: token
+// async function tokenRefreshDb(token) {
+//   return await knex('options').where('key', 'tokenLingvo').update({
+//     value: token
+//   });
+// }
+
+async function refreshToken() {
+  newToken = await getTokenFromLingvo();
+  if (newToken) {
+    await setTokenToDb(newToken);
+    return newToken;
+  }
+  return false;
+}
+
+async function testTranslate(token) {
+  const russianWord = await translate(token, 'a');
+  if (russianWord) {
+    return token;
+  }
+
+  const newToken = await getTokenFromLingvo();
+  if (newToken) {
+    return newToken;
+  }
+
+  return false;
+}
+
+async function saveWordToDb(dataForInsert) {
+  return await knex('dictionary').insert(
+    dataForInsert
+  ).then(() => {
+    return true;
+  }).catch((error) => {
+    //dublicate key en word
+    if (error.code === '23505') {
+      return true;
+    }
+    return false;
   });
 }
 
@@ -77,4 +113,6 @@ module.exports.getTokenFromLingvo = getTokenFromLingvo;
 module.exports.translate = translate;
 module.exports.getTokenFromDb = getTokenFromDb;
 module.exports.setTokenToDb = setTokenToDb;
-module.exports.tokenRefreshDb = tokenRefreshDb;
+module.exports.saveWordToDb = saveWordToDb;
+module.exports.testTranslate = testTranslate;
+module.exports.refreshToken = refreshToken;

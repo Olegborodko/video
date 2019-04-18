@@ -28,48 +28,10 @@ router.post('/api/admin/wordsToDb', async (ctx) => {
     return;
   }
 
-  async function refreshToken() {
-    newToken = await translateApi.getTokenFromLingvo();
-    if (newToken) {
-      await translateApi.setTokenToDb(newToken);
-      return newToken;
-    }
-    return false;
-  }
-
-  async function testToken(token) {
-    const russianWord = await translateApi.translate(token, 'a');
-    if (russianWord) {
-      return token;
-    }
-
-    const newToken = await refreshToken();
-    if (newToken) {
-      return newToken;
-    }
-
-    return false;
-  }
-
-  async function saveWordToDb(dataForInsert) {
-    return await knex('dictionary').insert(
-      dataForInsert
-    ).then(() => {
-      return true;
-    }).catch((error) => {
-      //dublicate key en word
-      if (error.code === '23505') {
-        return true;
-      }
-      return false;
-    });
-  }
-
-
   let token = await translateApi.getTokenFromDb();
 
   if (!token) {
-    token = await refreshToken();
+    token = await translateApi.refreshToken();
 
     if (!token) {
       ctx.response.body = { "errors": "Error access to Lingvo" };
@@ -78,7 +40,7 @@ router.post('/api/admin/wordsToDb', async (ctx) => {
     }
   }
 
-  token = await testToken(token);
+  token = await translateApi.testTranslate(token);
   if (!token) {
     ctx.response.body = { "errors": "Error access to Lingvo" };
     ctx.response.status = 401;
@@ -98,7 +60,7 @@ router.post('/api/admin/wordsToDb', async (ctx) => {
           ru: russianWord,
           counter: 1
         };
-        if (!await saveWordToDb(data)) {
+        if (!await translateApi.saveWordToDb(data)) {
           ctx.response.body = { errors: "Error insert to database dictionary" }
           ctx.response.status = 400;
           return;

@@ -77,6 +77,6 @@ app.use(router.routes());
 // }, app.callback()).listen(process.env.PORT);
 // module.exports = server;
 
-app.listen(process.env.PORT);
+//app.listen(process.env.PORT);
 
-module.exports = app;
+module.exports = app.listen(process.env.PORT);
