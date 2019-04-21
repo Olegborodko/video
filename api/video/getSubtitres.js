@@ -22,7 +22,9 @@ router.post('/api/video/getSubtitres', async (ctx) => {
 
   const { id } = getVideoId(link);
   if (id) {
-    const requestXML = await requestPromise(`http://video.google.com/timedtext?lang=en&v=${id}`)
+    const requestXML = await requestPromise(
+      `http://video.google.com/timedtext?lang=en&v=${id}`,
+    )
       .then(data => data)
       .catch(() => false);
 

@@ -9,15 +9,19 @@ module.exports = async (tokenAccess) => {
   }
   const userId = tokenData.data;
 
-  return await knex('users').where('id', userId).select('email').then((data) => {
-    if (
-      data.length > 0 &&
-      data[0].hasOwnProperty('email') &&
-      data[0].email === process.env.ADMIN_EMAIL
-    ) {
-      return true;
-    };
-    return false;
-  });
+  const result = await knex('users')
+    .where('id', userId)
+    .select('email')
+    .then((data) => {
+      if (
+        data.length > 0
+        && Object.prototype.hasOwnProperty.call(data[0], 'email')
+        && data[0].email === process.env.ADMIN_EMAIL
+      ) {
+        return true;
+      }
+      return false;
+    });
 
+  return result;
 };

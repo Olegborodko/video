@@ -9,22 +9,24 @@ async function getTokenFromLingvo() {
     method: 'POST',
     resolveWithFullResponse: true,
     body: {
-      "mode": "formdata",
-      "formdata": []
+      mode: 'formdata',
+      formdata: [],
     },
     headers: {
-      'Authorization': `Basic ${process.env.LINGVO_KEY}`
+      Authorization: `Basic ${process.env.LINGVO_KEY}`,
     },
-    json: true
+    json: true,
   };
-  return await requestPromise(options).then((data) => {
+
+  const result = await requestPromise(options).then((data) => {
     if (data.statusCode === 200) {
       return data.body;
-    } else {
-      return false;
     }
+    return false;
   });
-};
+
+  return result;
+}
 
 async function translate(token, text) {
   const options = {
@@ -32,34 +34,38 @@ async function translate(token, text) {
     method: 'GET',
     simple: false,
     qs: {
-      text: text,
+      text,
       srcLang: 1033,
-      dstLang: 1049
+      dstLang: 1049,
     },
     headers: {
-      'Authorization': `Bearer ${token}`
+      Authorization: `Bearer ${token}`,
     },
-    json: true
+    json: true,
   };
-  return await requestPromise(options).then((data) => {
+  const result = await requestPromise(options).then((data) => {
     if (data && data.Translation && data.Translation.Translation) {
-      return data.Translation.Translation
-    } else {
-      return false;
+      return {
+        ru: data.Translation.Translation,
+        en: text,
+      };
     }
+    return false;
   });
-};
+
+  return result;
+}
 
 function getTokenFromFile() {
   const result = fs.readFileSync('./db/tokenLingvo.js', { encoding: 'utf-8' });
-  if (result.length > 0){
-    return result;  
+  if (result.length > 0) {
+    return result;
   }
   return false;
 }
 
 function setTokenToFile(token) {
-  fs.writeFileSync("./db/tokenLingvo.js", token);
+  fs.writeFileSync('./db/tokenLingvo.js', token);
 }
 
 async function refreshToken() {
@@ -86,17 +92,18 @@ async function testTranslate(token) {
 }
 
 async function saveWordToDb(dataForInsert) {
-  return await knex('dictionary').insert(
-    dataForInsert
-  ).then(() => {
-    return true;
-  }).catch((error) => {
-    //dublicate key en word
-    if (error.code === '23505') {
-      return true;
-    }
-    return false;
-  });
+  const result = await knex('dictionary')
+    .insert(dataForInsert)
+    .then(() => true)
+    .catch((error) => {
+      // dublicate key en word
+      if (error.code === '23505') {
+        return true;
+      }
+      throw error;
+    });
+
+  return result;
 }
 
 module.exports.getTokenFromLingvo = getTokenFromLingvo;

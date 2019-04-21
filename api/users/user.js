@@ -1,4 +1,3 @@
-
 const Router = require('koa-router');
 
 const router = new Router();
@@ -17,14 +16,16 @@ router.get('/api/users/:id', async (ctx) => {
     return;
   }
 
-  await knex('users').where('id', id).then((data) => {
-    if (data.length) {
-      ctx.response.body = data;
-      ctx.response.status = 200;
-    } else {
-      ctx.response.status = 400;
-    }
-  });
+  await knex('users')
+    .where('id', id)
+    .then((data) => {
+      if (data.length) {
+        ctx.response.body = data;
+        ctx.response.status = 200;
+      } else {
+        ctx.response.status = 400;
+      }
+    });
 });
 
 module.exports = router;

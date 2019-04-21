@@ -20,15 +20,19 @@ const adminRoutes = require('./api/admin');
 const app = new Koa();
 const router = new Router();
 
-app.use(cors({
-  origin: '*',
-}));
+app.use(
+  cors({
+    origin: '*',
+  }),
+);
 
 app.use(serve('./public'));
 
 const swaggerOptions = {};
 if (process.env.NODE_ENV === 'development') {
-  swaggerOptions.url = `http://${process.env.HOST}:${process.env.PORT}/openapi.yaml`;
+  swaggerOptions.url = `http://${process.env.HOST}:${
+    process.env.PORT
+  }/openapi.yaml`;
 } else {
   swaggerOptions.url = `https://${process.env.HOST}/openapi.yaml`;
 }
@@ -42,27 +46,32 @@ app.use(
 
 app.use(bodyParser());
 app.use(logger('tiny'));
-app.use(errorDB({
-  // preFormat: (err) => {
-  //   return err.status = 400;
-  // }
-  format: err => ({
-    errors: err.message,
+app.use(
+  errorDB({
+    // preFormat: (err) => {
+    //   return err.status = 400;
+    // }
+    format: err => ({
+      errors: err.message,
+    }),
   }),
-}));
+);
 
-app.use(jwtMiddleware({
-  secret: process.env.JWT_SECRET,
-  cookie: 'token_access',
-}).unless({
-  path: ['/api/users/truncate',
-    '/api/users/create',
-    '/api/users/auth',
-    '/api/video/getSubtitres',
-    '/api/video/getInfo',
-    '/api/video/subtitlesToHash',
-  ],
-}));
+app.use(
+  jwtMiddleware({
+    secret: process.env.JWT_SECRET,
+    cookie: 'token_access',
+  }).unless({
+    path: [
+      '/api/users/truncate',
+      '/api/users/create',
+      '/api/users/auth',
+      '/api/video/getSubtitres',
+      '/api/video/getInfo',
+      '/api/video/subtitlesToHash',
+    ],
+  }),
+);
 
 app.use(usersRoutes());
 app.use(videoRoutes());
@@ -77,6 +86,6 @@ app.use(router.routes());
 // }, app.callback()).listen(process.env.PORT);
 // module.exports = server;
 
-//app.listen(process.env.PORT);
+// app.listen(process.env.PORT);
 
 module.exports = app.listen(process.env.PORT);

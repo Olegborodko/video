@@ -8,9 +8,11 @@ router.post('/api/users/logout', async (ctx) => {
   const userId = currentUserId(ctx.cookies.get('token_access'));
 
   if (userId) {
-    await knex('users').where('id', userId).update({
-      token: '',
-    });
+    await knex('users')
+      .where('id', userId)
+      .update({
+        token: '',
+      });
 
     ctx.cookies.set('token_access', '');
     ctx.response.body = { success: 'logout' };

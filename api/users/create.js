@@ -21,16 +21,20 @@ router.post('/api/users/create', async (ctx) => {
     return;
   }
 
-  const passwordProtect = await bcryptHashPromice(password, saltRounds).then(data => data);
+  const passwordProtect = await bcryptHashPromice(password, saltRounds).then(
+    data => data,
+  );
 
   const tokenRefresh = jwtEncode(uuidv4(), '0');
 
-  await knex('users').returning('id').insert({
-    name,
-    email,
-    password: passwordProtect,
-    token: tokenRefresh,
-  })
+  await knex('users')
+    .returning('id')
+    .insert({
+      name,
+      email,
+      password: passwordProtect,
+      token: tokenRefresh,
+    })
     .then((data) => {
       const id = data[0];
       const tokenAccess = jwtEncode(id, '30m'); // '30m' , '1ms'
