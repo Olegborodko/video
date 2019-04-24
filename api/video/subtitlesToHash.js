@@ -7,7 +7,9 @@ const knex = require('../../config/knex');
 const subtitlesSchema = require('../joiHelpers/schemes/subtitles');
 const runValidation = require('../joiHelpers/runValidation');
 
-router.post('/api/video/subtitlesToHash', async (ctx) => {
+const translateApi = require('./helpers/translateApi');
+
+router.post('/api/video/subtitlesToHash', async ctx => {
   const { subtitles } = ctx.request.body;
 
   const errors = runValidation(ctx.request.body, subtitlesSchema);
@@ -35,25 +37,41 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
   const wordsObject = {};
   const allWordsFromDb = [];
 
-  async function wordsFromDb(correctWord) {
+  async function wordsFromDbOrTanslate(token, correctWord) {
     return knex('dictionary')
       .where('en', correctWord)
-      .then((data) => {
+      .then(data => {
         if (data.length > 0) {
           wordsObject[correctWord] = data[0].ru;
+        } else {
+          // translate word throught api
+          const translateResult = translateApi
+            .translateAndSave(token, correctWord)
+            .then(data => {
+              if (data) {
+                wordsObject[correctWord] = data;
+              } else {
+                wordsObject[correctWord] = false;
+              }
+            });
         }
       });
   }
 
-  subtitles.forEach((value) => {
+  const token = await translateApi.getCorrectToken();
+  // const test = await wordsFromDbOrTanslate(token, "a");
+  // console.log(wordsObject);
+  // return;
+
+  subtitles.forEach(value => {
     const value1 = value.text.toLowerCase();
     const arrayWords = value1.split(/[\s,]+/);
 
-    arrayWords.forEach((item) => {
+    arrayWords.forEach(item => {
       const correctWord = wordCheck(item);
       if (correctWord && !wordsObject[correctWord]) {
         wordsObject[correctWord] = true;
-        allWordsFromDb.push(wordsFromDb(correctWord));
+        allWordsFromDb.push(wordsFromDbOrTanslate(token, correctWord));
       }
     });
   });

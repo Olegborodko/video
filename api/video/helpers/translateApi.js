@@ -18,7 +18,7 @@ async function getTokenFromLingvo() {
     json: true,
   };
 
-  const result = await requestPromise(options).then((data) => {
+  const result = await requestPromise(options).then(data => {
     if (data.statusCode === 200) {
       return data.body;
     }
@@ -43,7 +43,7 @@ async function translate(token, text) {
     },
     json: true,
   };
-  const result = await requestPromise(options).then((data) => {
+  const result = await requestPromise(options).then(data => {
     if (data && data.Translation && data.Translation.Translation) {
       return {
         ru: data.Translation.Translation,
@@ -95,13 +95,50 @@ async function saveWordToDb(dataForInsert) {
   const result = await knex('dictionary')
     .insert(dataForInsert)
     .then(() => true)
-    .catch((error) => {
+    .catch(error => {
       // dublicate key en word
       if (error.code === '23505') {
         return true;
       }
       throw error;
     });
+
+  return result;
+}
+
+async function getCorrectToken() {
+  let token = getTokenFromFile();
+
+  if (!token) {
+    token = await refreshToken();
+  }
+
+  token = await testTranslate(token);
+  if (token) {
+    return token;
+  }
+
+  return false;
+}
+
+async function translateAndSave(token, enWord) {
+  const result = await translate(token, enWord).then(res => {
+    if (res) {
+      const data = {
+        en: res.en,
+        ru: res.ru,
+        counter: 1,
+      };
+
+      return saveWordToDb(data).then(data => {
+        if (data) {
+          return res.en;
+        }
+        return false;
+      });
+    }
+    return false;
+  });
 
   return result;
 }
@@ -113,3 +150,6 @@ module.exports.setTokenToFile = setTokenToFile;
 module.exports.saveWordToDb = saveWordToDb;
 module.exports.testTranslate = testTranslate;
 module.exports.refreshToken = refreshToken;
+
+module.exports.getCorrectToken = getCorrectToken;
+module.exports.translateAndSave = translateAndSave;

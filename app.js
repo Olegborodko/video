@@ -75,7 +75,7 @@ app.use(
 
 app.use(usersRoutes());
 app.use(videoRoutes());
-app.use(adminRoutes());
+// app.use(adminRoutes());
 app.use(router.routes());
 
 // const server = https.createServer({

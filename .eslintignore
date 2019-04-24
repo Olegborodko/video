@@ -1,6 +1,5 @@
 /temp
 /api/tests
-api/tests
 /config/http_keys
 /db/migrations
 /db/seeds
