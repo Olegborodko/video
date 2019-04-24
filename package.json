@@ -10,7 +10,8 @@
     "start": "NODE_ENV=development nodemon app.js",
     "test": "NODE_ENV=test PORT=3001 NODE_TLS_REJECT_UNAUTHORIZED=0 jest --watchAll",
     "lint": "eslint . --fix",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "prettier": "prettier --write '*.js'"
   },
   "author": "borodkoleg@gmail.com",
   "license": "ISC",

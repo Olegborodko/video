@@ -18,7 +18,7 @@ async function getTokenFromLingvo() {
     json: true,
   };
 
-  const result = await requestPromise(options).then(data => {
+  const result = await requestPromise(options).then((data) => {
     if (data.statusCode === 200) {
       return data.body;
     }
@@ -43,7 +43,7 @@ async function translate(token, text) {
     },
     json: true,
   };
-  const result = await requestPromise(options).then(data => {
+  const result = await requestPromise(options).then((data) => {
     if (data && data.Translation && data.Translation.Translation) {
       return {
         ru: data.Translation.Translation,
@@ -95,7 +95,7 @@ async function saveWordToDb(dataForInsert) {
   const result = await knex('dictionary')
     .insert(dataForInsert)
     .then(() => true)
-    .catch(error => {
+    .catch((error) => {
       // dublicate key en word
       if (error.code === '23505') {
         return true;
