@@ -43,17 +43,18 @@ router.post('/api/video/subtitlesToHash', async ctx => {
       .then(data => {
         if (data.length > 0) {
           wordsObject[correctWord] = data[0].ru;
+          return true;
         } else {
           // translate word throught api
-          const translateResult = translateApi
-            .translateAndSave(token, correctWord)
-            .then(data => {
-              if (data) {
-                wordsObject[correctWord] = data;
-              } else {
-                wordsObject[correctWord] = false;
-              }
-            });
+          return translateApi.translateAndSave(token, correctWord).then(res => {
+            if (res) {
+              wordsObject[correctWord] = res;
+              return true;
+            } else {
+              wordsObject[correctWord] = true;
+              return false;
+            }
+          });
         }
       });
   }
@@ -63,15 +64,17 @@ router.post('/api/video/subtitlesToHash', async ctx => {
   // console.log(wordsObject);
   // return;
 
-  subtitles.forEach(value => {
-    const value1 = value.text.toLowerCase();
+  subtitles.text.forEach(value => {
+    const value1 = value.$t.toLowerCase();
     const arrayWords = value1.split(/[\s,]+/);
 
     arrayWords.forEach(item => {
       const correctWord = wordCheck(item);
       if (correctWord && !wordsObject[correctWord]) {
         wordsObject[correctWord] = true;
-        allWordsFromDb.push(wordsFromDbOrTanslate(token, correctWord));
+        if (token) {
+          allWordsFromDb.push(wordsFromDbOrTanslate(token, correctWord));
+        }
       }
     });
   });

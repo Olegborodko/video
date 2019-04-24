@@ -122,34 +122,30 @@ async function getCorrectToken() {
 }
 
 async function translateAndSave(token, enWord) {
-  const result = await translate(token, enWord).then(res => {
-    if (res) {
-      const data = {
-        en: res.en,
-        ru: res.ru,
-        counter: 1,
-      };
+  const translateResult = await translate(token, enWord);
 
-      return saveWordToDb(data).then(data => {
-        if (data) {
-          return res.en;
-        }
-        return false;
-      });
+  if (translateResult) {
+    const data = {
+      en: translateResult.en,
+      ru: translateResult.ru,
+      counter: 1,
+    };
+
+    if (await saveWordToDb(data)) {
+      return translateResult.ru;
     }
-    return false;
-  });
+  }
 
-  return result;
+  return false;
 }
 
-module.exports.getTokenFromLingvo = getTokenFromLingvo;
-module.exports.translate = translate;
-module.exports.getTokenFromFile = getTokenFromFile;
-module.exports.setTokenToFile = setTokenToFile;
-module.exports.saveWordToDb = saveWordToDb;
-module.exports.testTranslate = testTranslate;
-module.exports.refreshToken = refreshToken;
+// module.exports.getTokenFromLingvo = getTokenFromLingvo;
+// module.exports.translate = translate;
+// module.exports.getTokenFromFile = getTokenFromFile;
+// module.exports.setTokenToFile = setTokenToFile;
+// module.exports.saveWordToDb = saveWordToDb;
+// module.exports.testTranslate = testTranslate;
+// module.exports.refreshToken = refreshToken;
 
 module.exports.getCorrectToken = getCorrectToken;
 module.exports.translateAndSave = translateAndSave;
