@@ -39,7 +39,9 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
 
   async function wordsFromDbOrTanslate(token, correctWord) {
     return knex('dictionary')
+      .increment('counter')
       .where('en', correctWord)
+      .returning('*')
       .then((data) => {
         if (data.length > 0) {
           wordsObject[correctWord] = data[0].ru;
