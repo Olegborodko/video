@@ -6,8 +6,15 @@ const getVideoId = require('get-video-id');
 const parser = require('xml2json');
 const videoLinkSchema = require('../joiHelpers/schemes/videoLink');
 const runValidation = require('../joiHelpers/runValidation');
+const currentUserIsAdmin = require('./helpers/ifAdmin');
 
-router.post('/api/video/getSubtitres', async (ctx) => {
+router.post('/api/admin/getSubtitres', async (ctx) => {
+  if (!(await currentUserIsAdmin(ctx.cookies.get('token_access')))) {
+    ctx.response.body = { errors: 'Access not allowed' };
+    ctx.response.status = 401;
+    return;
+  }
+
   const { link } = ctx.request.body;
 
   const errors = runValidation(ctx.request.body, videoLinkSchema);
@@ -24,9 +31,7 @@ router.post('/api/video/getSubtitres', async (ctx) => {
   if (id) {
     const requestXML = await requestPromise(
       `http://video.google.com/timedtext?lang=en&v=${id}`,
-    )
-      .then(data => data)
-      .catch(() => false);
+    ).catch(() => false);
 
     if (requestXML) {
       const json = parser.toJson(requestXML);

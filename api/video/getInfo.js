@@ -25,9 +25,7 @@ router.post('/api/video/getInfo', async (ctx) => {
       `https://www.googleapis.com/youtube/v3/videos?id=${id}&part=snippet&key=${
         process.env.YOUTUBE_KEY
       }`,
-    )
-      .then(data => data)
-      .catch(() => false);
+    ).catch(() => false);
 
     const dataObject = JSON.parse(videoData);
 

@@ -15,7 +15,7 @@ const serve = require('koa-static');
 
 const usersRoutes = require('./api/users');
 const videoRoutes = require('./api/video');
-// const adminRoutes = require('./api/admin');
+const adminRoutes = require('./api/admin');
 
 const app = new Koa();
 const router = new Router();
@@ -63,10 +63,8 @@ app.use(
     cookie: 'token_access',
   }).unless({
     path: [
-      '/api/users/truncate',
       '/api/users/create',
       '/api/users/auth',
-      '/api/video/getSubtitres',
       '/api/video/getInfo',
       '/api/video/subtitlesToHash',
     ],
@@ -75,7 +73,7 @@ app.use(
 
 app.use(usersRoutes());
 app.use(videoRoutes());
-// app.use(adminRoutes());
+app.use(adminRoutes());
 app.use(router.routes());
 
 // const server = https.createServer({

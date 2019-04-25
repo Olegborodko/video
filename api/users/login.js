@@ -30,10 +30,7 @@ router.post('/api/users/auth', async (ctx) => {
   });
 
   if (data) {
-    const passwordTrue = await bcryptComparePromice(
-      password,
-      data[0].password,
-    ).then(result => result);
+    const passwordTrue = await bcryptComparePromice(password, data[0].password);
 
     if (passwordTrue) {
       const tokenAccess = jwtEncode(data[0].id, '30m');

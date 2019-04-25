@@ -1,7 +1,7 @@
-// const combineRouters = require('koa-combine-routers');
+const combineRouters = require('koa-combine-routers');
 
-// const wordsToDb = require('./wordsToDb');
+const getSubtitles = require('./getSubtitles');
 
-// const router = combineRouters(wordsToDb);
+const router = combineRouters(getSubtitles);
 
-// module.exports = router;
+module.exports = router;

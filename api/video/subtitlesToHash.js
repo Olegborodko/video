@@ -58,9 +58,6 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
   }
 
   const token = await translateApi.getCorrectToken();
-  // const test = await wordsFromDbOrTanslate(token, "a");
-  // console.log(wordsObject);
-  // return;
 
   subtitles.text.forEach((value) => {
     const value1 = value.$t.toLowerCase();

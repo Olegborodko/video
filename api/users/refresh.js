@@ -18,7 +18,7 @@ router.post('/api/users/refresh', async (ctx) => {
 
     const userIdPromice = knex('users').where('id', userId);
 
-    const user = await userIdPromice.then(data => data);
+    const user = await userIdPromice;
 
     if (user[0].token === tokenRefresh) {
       userIdPromice.update({

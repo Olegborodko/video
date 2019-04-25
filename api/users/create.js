@@ -21,9 +21,7 @@ router.post('/api/users/create', async (ctx) => {
     return;
   }
 
-  const passwordProtect = await bcryptHashPromice(password, saltRounds).then(
-    data => data,
-  );
+  const passwordProtect = await bcryptHashPromice(password, saltRounds);
 
   const tokenRefresh = jwtEncode(uuidv4(), '0');
 
