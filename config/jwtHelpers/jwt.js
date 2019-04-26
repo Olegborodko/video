@@ -1,11 +1,11 @@
-require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 module.exports.jwtEncode = (data, time) => jwt.sign(
   {
     data,
   },
-  process.env.JWT_SECRET,
+  config.general.jwtSecret,
   {
     expiresIn: time,
   },
@@ -13,7 +13,7 @@ module.exports.jwtEncode = (data, time) => jwt.sign(
 
 module.exports.jwtDecode = (token) => {
   try {
-    return jwt.verify(token, process.env.JWT_SECRET);
+    return jwt.verify(token, config.general.jwtSecret);
   } catch (err) {
     return false;
   }

@@ -1,4 +1,3 @@
-require('dotenv').config();
 const Koa = require('koa');
 const Router = require('koa-router');
 const bodyParser = require('koa-body');
@@ -9,6 +8,7 @@ const errorDB = require('koa-json-error');
 const koaSwagger = require('koa2-swagger-ui');
 const cors = require('koa2-cors');
 const serve = require('koa-static');
+const config = require('./config/config');
 
 // const fs = require('fs');
 // const https = require('https');
@@ -29,12 +29,12 @@ app.use(
 app.use(serve('./public'));
 
 const swaggerOptions = {};
-if (process.env.NODE_ENV === 'development') {
-  swaggerOptions.url = `http://${process.env.HOST}:${
-    process.env.PORT
+if (config.general.nodeEnv === 'development') {
+  swaggerOptions.url = `http://${config.general.host}:${
+    config.general.port
   }/openapi.yaml`;
 } else {
-  swaggerOptions.url = `https://${process.env.HOST}/openapi.yaml`;
+  swaggerOptions.url = `https://${config.general.host}/openapi.yaml`;
 }
 
 app.use(
@@ -59,7 +59,7 @@ app.use(
 
 app.use(
   jwtMiddleware({
-    secret: process.env.JWT_SECRET,
+    secret: config.general.jwtSecret,
     cookie: 'token_access',
   }).unless({
     path: [
@@ -86,4 +86,4 @@ app.use(router.routes());
 
 // app.listen(process.env.PORT);
 
-module.exports = app.listen(process.env.PORT);
+module.exports = app.listen(config.general.port);

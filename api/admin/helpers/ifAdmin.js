@@ -1,4 +1,4 @@
-require('dotenv').config();
+const config = require('../../../config/config');
 const { jwtDecode } = require('../../../config/jwtHelpers/jwt');
 const knex = require('../../../config/knex');
 
@@ -16,7 +16,7 @@ module.exports = async (tokenAccess) => {
       if (
         data.length > 0
         && Object.prototype.hasOwnProperty.call(data[0], 'email')
-        && data[0].email === process.env.ADMIN_EMAIL
+        && data[0].email === config.general.adminEmail
       ) {
         return true;
       }

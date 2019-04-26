@@ -1,5 +1,6 @@
 const uuidv4 = require('uuid/v4');
 const Router = require('koa-router');
+const config = require('../../config/config');
 const knex = require('../../config/knex');
 
 const { jwtEncode } = require('../../config/jwtHelpers/jwt');
@@ -13,8 +14,11 @@ router.post('/api/users/refresh', async (ctx) => {
   const userId = currentUserId(ctx.cookies.get('token_access'));
 
   if (userId) {
-    const tokenAccess = jwtEncode(userId, '30m');
-    const newTokenRefresh = jwtEncode(uuidv4(), '30d');
+    const tokenAccess = jwtEncode(userId, config.general.tokenAccessTime);
+    const newTokenRefresh = jwtEncode(
+      uuidv4(),
+      config.general.tokenRefreshTime,
+    );
 
     const userIdPromice = knex('users').where('id', userId);
 

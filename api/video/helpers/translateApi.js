@@ -1,6 +1,6 @@
-require('dotenv').config();
 const fs = require('fs');
 const requestPromise = require('request-promise');
+const config = require('../../../config/config');
 const knex = require('../../../config/knex');
 
 async function getTokenFromLingvo() {
@@ -13,7 +13,7 @@ async function getTokenFromLingvo() {
       formdata: [],
     },
     headers: {
-      Authorization: `Basic ${process.env.LINGVO_KEY}`,
+      Authorization: `Basic ${config.general.lingvoKey}`,
     },
     json: true,
   };
@@ -35,8 +35,8 @@ async function translate(token, text) {
     simple: false,
     qs: {
       text,
-      srcLang: 1033,
-      dstLang: 1049,
+      srcLang: config.general.translateFrom,
+      dstLang: config.general.translateTo,
     },
     headers: {
       Authorization: `Bearer ${token}`,
@@ -79,11 +79,13 @@ async function refreshToken() {
 
 async function testTranslate(token) {
   const russianWord = await translate(token, 'a');
+
   if (russianWord) {
     return token;
   }
 
   const newToken = await getTokenFromLingvo();
+
   if (newToken) {
     return newToken;
   }
@@ -97,7 +99,7 @@ async function saveWordToDb(dataForInsert) {
     .then(() => true)
     .catch((error) => {
       // dublicate key en word
-      if (error.code === '23505') {
+      if (error.code === config.errors.db.alreadyExist) {
         return true;
       }
       throw error;
@@ -114,6 +116,7 @@ async function getCorrectToken() {
   }
 
   token = await testTranslate(token);
+
   if (token) {
     return token;
   }
@@ -144,7 +147,7 @@ async function translateAndSave(token, enWord) {
 // module.exports.getTokenFromFile = getTokenFromFile;
 // module.exports.setTokenToFile = setTokenToFile;
 // module.exports.saveWordToDb = saveWordToDb;
-// module.exports.testTranslate = testTranslate;
+module.exports.testTranslate = testTranslate;
 // module.exports.refreshToken = refreshToken;
 
 module.exports.getCorrectToken = getCorrectToken;

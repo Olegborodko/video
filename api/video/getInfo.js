@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const router = new Router();
 const requestPromise = require('request-promise');
 const getVideoId = require('get-video-id');
+const config = require('../../config/config');
 
 const videoLinkSchema = require('../joiHelpers/schemes/videoLink');
 const runValidation = require('../joiHelpers/runValidation');
@@ -23,7 +24,7 @@ router.post('/api/video/getInfo', async (ctx) => {
   if (id) {
     const videoData = await requestPromise(
       `https://www.googleapis.com/youtube/v3/videos?id=${id}&part=snippet&key=${
-        process.env.YOUTUBE_KEY
+        config.general.youtubeKey
       }`,
     ).catch(() => false);
 

@@ -7,7 +7,7 @@
     "node": "10.13.0"
   },
   "scripts": {
-    "start": "NODE_ENV=development nodemon app.js",
+    "start": "nodemon app.js",
     "test": "NODE_ENV=test PORT=3001 NODE_TLS_REJECT_UNAUTHORIZED=0 jest --watchAll",
     "lint": "eslint . --fix",
     "lint-staged": "lint-staged",

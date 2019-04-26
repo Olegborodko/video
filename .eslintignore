@@ -2,7 +2,7 @@
 /api/tests
 /config/http_keys
 /db/migrations
-/db/seeds
+/db/seeds/dictionary.js
 /db/tokenLingvo.js
 /node_modules
 /public

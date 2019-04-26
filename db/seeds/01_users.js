@@ -1,4 +1,4 @@
-require('dotenv').config();
+const config = require('../../config/config');
 const { bcryptHashSync } = require('../../config/bcrypt');
 
 exports.seed = knex => knex('users').del()
@@ -16,9 +16,9 @@ exports.seed = knex => knex('users').del()
       night_mode: false,
     },
     {
-      email: process.env.ADMIN_EMAIL,
-      password: bcryptHashSync(process.env.ADMIN_PASSWORD),
-      name: process.env.ADMIN_NAME,
+      email: config.general.adminEmail,
+      password: bcryptHashSync(config.general.adminPassword),
+      name: config.general.adminName,
       night_mode: false,
     },
   ]));

@@ -1,7 +1,9 @@
+const config = require('../../config/config');
+
 module.exports = (error) => {
   const result = {};
 
-  if (error.code === '23505') {
+  if (error.code === config.errors.db.alreadyExist) {
     if (error.constraint) {
       const key = error.constraint.split('_')[1];
       if (key) {

@@ -1,5 +1,6 @@
 const Router = require('koa-router');
 const uuidv4 = require('uuid/v4');
+const config = require('../../config/config');
 
 const router = new Router();
 const knex = require('../../config/knex');
@@ -35,7 +36,7 @@ router.post('/api/users/create', async (ctx) => {
     })
     .then((data) => {
       const id = data[0];
-      const tokenAccess = jwtEncode(id, '30m'); // '30m' , '1ms'
+      const tokenAccess = jwtEncode(id, config.general.tokenAccessTime); // '30m' , '1ms'
 
       ctx.cookies.set('token_access', tokenAccess);
 

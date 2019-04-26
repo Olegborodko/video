@@ -1,5 +1,6 @@
 const Router = require('koa-router');
 const uuidv4 = require('uuid/v4');
+const config = require('../../config/config');
 
 const router = new Router();
 const knex = require('../../config/knex');
@@ -33,8 +34,8 @@ router.post('/api/users/auth', async (ctx) => {
     const passwordTrue = await bcryptComparePromice(password, data[0].password);
 
     if (passwordTrue) {
-      const tokenAccess = jwtEncode(data[0].id, '30m');
-      const tokenRefresh = jwtEncode(uuidv4(), '30d');
+      const tokenAccess = jwtEncode(data[0].id, config.general.tokenAccessTime);
+      const tokenRefresh = jwtEncode(uuidv4(), config.general.tokenRefreshTime);
 
       await dataPromice.update({
         token: tokenRefresh,
