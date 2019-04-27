@@ -127,19 +127,20 @@ async function getCorrectToken() {
 async function translateAndSave(token, enWord) {
   const translateResult = await translate(token, enWord);
 
-  if (translateResult) {
-    const data = {
-      en: translateResult.en,
-      ru: translateResult.ru,
-      counter: 1,
-    };
+  const data = {
+    en: enWord,
+    counter: 1,
+  };
 
-    if (await saveWordToDb(data)) {
-      return translateResult.ru;
-    }
+  if (translateResult) {
+    data.ru = translateResult.ru;
+  } else {
+    data.ru = '';
   }
 
-  return false;
+  await saveWordToDb(data);
+
+  return data.ru;
 }
 
 // module.exports.getTokenFromLingvo = getTokenFromLingvo;
@@ -147,7 +148,7 @@ async function translateAndSave(token, enWord) {
 // module.exports.getTokenFromFile = getTokenFromFile;
 // module.exports.setTokenToFile = setTokenToFile;
 // module.exports.saveWordToDb = saveWordToDb;
-module.exports.testTranslate = testTranslate;
+// module.exports.testTranslate = testTranslate;
 // module.exports.refreshToken = refreshToken;
 
 module.exports.getCorrectToken = getCorrectToken;

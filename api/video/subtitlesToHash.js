@@ -48,12 +48,8 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
         }
         // translate word throught api
         return translateApi.translateAndSave(token, correctWord).then((res) => {
-          if (res) {
-            wordsObject[correctWord] = res;
-            return true;
-          }
-          wordsObject[correctWord] = true;
-          return false;
+          wordsObject[correctWord] = res;
+          return true;
         });
       });
   }

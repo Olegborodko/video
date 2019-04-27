@@ -6,6 +6,7 @@ exports.up = function (knex) {
     table.string('en').notNullable();
     table.string('ru').notNullable();
     table.integer('counter');
+    table.boolean('protect').defaultTo(false);
     table.timestamps(false, true);
 
     table.unique('en');
