@@ -4,22 +4,18 @@ const router = new Router();
 
 const knex = require('../../config/knex');
 
-const getWordsSchema = require('../joiHelpers/schemes/admin/getWords');
+const deleteWordsSchema = require('../joiHelpers/schemes/admin/deleteWords');
 const runValidation = require('../joiHelpers/runValidation');
 const currentUserIsAdmin = require('./helpers/ifAdmin');
 
-const knexPagination = require('../../lib/knexPagination');
-
-knexPagination(knex);
-
-router.post('/api/admin/getWords', async (ctx) => {
+router.post('/api/admin/deleteWords', async (ctx) => {
   if (!(await currentUserIsAdmin(ctx.cookies.get('token_access')))) {
     ctx.response.body = { errors: 'Access not allowed' };
     ctx.response.status = 401;
     return;
   }
 
-  const errors = runValidation(ctx.request.body, getWordsSchema);
+  const errors = runValidation(ctx.request.body, deleteWordsSchema);
 
   if (errors) {
     ctx.response.body = { errors };
@@ -28,14 +24,12 @@ router.post('/api/admin/getWords', async (ctx) => {
   }
 
   const data = ctx.request.body;
-  let resultRequest = knex('dictionary');
+  let resultRequest = knex('dictionary')
+    .returning('id')
+    .where('protect', false);
 
   if (Object.prototype.hasOwnProperty.call(data, 'counter')) {
     resultRequest = resultRequest.where('counter', data.counter);
-  }
-
-  if (!Object.prototype.hasOwnProperty.call(data, 'page')) {
-    data.page = 1;
   }
 
   if (Object.prototype.hasOwnProperty.call(data, 'withoutTranslation')) {
@@ -44,19 +38,13 @@ router.post('/api/admin/getWords', async (ctx) => {
     }
   }
 
-  const result = await resultRequest.paginate(10, data.page, true);
-
-  const getCounter = await knex('dictionary')
-    .min('counter')
-    .max('counter');
-  if (
-    getCounter.length > 0
-    && Object.prototype.hasOwnProperty.call(getCounter[0], 'min')
-    && Object.prototype.hasOwnProperty.call(getCounter[0], 'max')
-  ) {
-    result.counterMin = getCounter[0].min;
-    result.counterMax = getCounter[0].max;
+  if (Object.prototype.hasOwnProperty.call(data, 'ids')) {
+    if (data.ids.length > 0) {
+      resultRequest = resultRequest.whereIn('id', data.ids);
+    }
   }
+
+  const result = await resultRequest.del();
 
   ctx.response.body = { result };
   ctx.response.status = 200;
