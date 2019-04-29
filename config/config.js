@@ -4,8 +4,6 @@ const env = process.env.NODE_ENV || 'development';
 
 const general = {
   nodeEnv: env,
-  host: process.env.HOST || 'localhost',
-  port: process.env.PORT || '3000',
 
   adminName: process.env.ADMIN_NAME || 'admin',
   adminEmail: process.env.ADMIN_EMAIL || 'admin@gmail.com',
@@ -36,6 +34,8 @@ const development = {
   db: 'videoplayer',
   user: 'postgres',
   password: 'postgres',
+  host: 'localhost',
+  port: '3000',
 };
 
 const test = {
@@ -44,13 +44,21 @@ const test = {
   db: 'videoplayer_test',
   user: 'postgres',
   password: 'postgres',
+  host: 'localhost',
+  port: '3001',
 };
 
 const production = {
   general,
   errors,
   dbUrl: process.env.DATABASE_URL,
+  host: process.env.HOST,
+  port: process.env.PORT,
 };
+
+// development.general = JSON.parse(JSON.stringify(general));
+// test.general = JSON.parse(JSON.stringify(general));
+// production.general = JSON.parse(JSON.stringify(general));
 
 const config = {
   development,

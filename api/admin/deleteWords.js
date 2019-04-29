@@ -44,9 +44,15 @@ router.post('/api/admin/deleteWords', async (ctx) => {
     }
   }
 
-  const result = await resultRequest.del();
+  const success = await resultRequest.del();
 
-  ctx.response.body = { result };
+  if (success.length === 0) {
+    ctx.response.body = { errors: 'Nothing found' };
+    ctx.response.status = 400;
+    return;
+  }
+
+  ctx.response.body = { success };
   ctx.response.status = 200;
 });
 

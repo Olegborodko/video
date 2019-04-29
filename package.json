@@ -7,8 +7,8 @@
     "node": "10.13.0"
   },
   "scripts": {
-    "start": "nodemon app.js",
-    "test": "NODE_ENV=test PORT=3001 NODE_TLS_REJECT_UNAUTHORIZED=0 jest --watchAll",
+    "start": "NODE_ENV=development nodemon app.js",
+    "test": "NODE_ENV=test NODE_TLS_REJECT_UNAUTHORIZED=0 jest --watchAll",
     "lint": "eslint . --fix",
     "lint-staged": "lint-staged",
     "prettier": "prettier --write '*.js'"

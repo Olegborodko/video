@@ -30,11 +30,9 @@ app.use(serve('./public'));
 
 const swaggerOptions = {};
 if (config.general.nodeEnv === 'development') {
-  swaggerOptions.url = `http://${config.general.host}:${
-    config.general.port
-  }/openapi.yaml`;
+  swaggerOptions.url = `http://${config.host}:${config.port}/openapi.yaml`;
 } else {
-  swaggerOptions.url = `https://${config.general.host}/openapi.yaml`;
+  swaggerOptions.url = `https://${config.host}/openapi.yaml`;
 }
 
 app.use(
@@ -86,4 +84,4 @@ app.use(router.routes());
 
 // app.listen(process.env.PORT);
 
-module.exports = app.listen(config.general.port);
+module.exports = app.listen(config.port);
