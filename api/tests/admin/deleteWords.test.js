@@ -1,13 +1,15 @@
 const request = require('supertest');
-const knex = require('../../../config/knex');
 
 const server = require('../../../app');
+
+const helpersUser = require('../helpers/users');
+const helpersDictionary = require('../helpers/dictionary');
+
+const knex = require('../../../config/knex');
+
 const config = require('../../../config/config');
 
-const { createUser, login } = require('../helpers/users');
-const { wordsNumber, getLastElementId } = require('../helpers/dictionary');
-
-let newUser, cookieUser, cookieAdmin;
+let cookieAdmin;
 beforeAll(async done => {
   await knex('dictionary').truncate();
   await knex('dictionary').insert([
@@ -44,28 +46,32 @@ beforeAll(async done => {
   ]);
 
   await knex.raw('TRUNCATE TABLE users, users_video CASCADE');
+
+  cookieAdmin = await helpersUser.createUser(
+    config.general.adminPassword,
+    config.general.adminEmail,
+    config.general.adminName,
+  );
+
   done();
 });
 
-afterAll(() => {});
+afterAll(() => {
+  server.close();
+});
 
 describe('/api/admin/deleteWords', () => {
-  test('401 not access', async () => {
+  test('401 not access', async done => {
     const response = await request(server)
       .post('/api/admin/deleteWords')
       .send();
 
     expect(response.status).toEqual(401);
     expect(response.body).toHaveProperty('errors');
+    done();
   });
 
-  test('403 errors without params', async () => {
-    cookieAdmin = await createUser(
-      config.general.adminPassword,
-      config.general.adminEmail,
-      config.general.adminName,
-    );
-
+  test('403 errors without params', async done => {
     const response = await request(server)
       .post('/api/admin/deleteWords')
       .set('Cookie', [`${cookieAdmin}`])
@@ -73,15 +79,11 @@ describe('/api/admin/deleteWords', () => {
 
     expect(response.status).toEqual(403);
     expect(response.body).toHaveProperty('errors');
+    done();
   });
 
-  test('200 counter', async () => {
-    cookieAdmin = await login(
-      config.general.adminPassword,
-      config.general.adminEmail,
-    );
-
-    numberWords = await wordsNumber();
+  test('200 counter', async done => {
+    numberWords = await helpersDictionary.wordsNumber();
     expect(numberWords[0].count).toEqual('5');
 
     const response = await request(server)
@@ -93,12 +95,13 @@ describe('/api/admin/deleteWords', () => {
 
     expect(response.status).toEqual(200);
     expect(response.body).toHaveProperty('success');
-    numberWords = await wordsNumber();
+    numberWords = await helpersDictionary.wordsNumber();
     expect(numberWords[0].count).toEqual('4');
+    done();
   });
 
-  test('200 ids', async () => {
-    const lastElement = await getLastElementId();
+  test('200 ids', async done => {
+    const lastElement = await helpersDictionary.getLastElementId();
 
     const response = await request(server)
       .post('/api/admin/deleteWords')
@@ -107,13 +110,14 @@ describe('/api/admin/deleteWords', () => {
         ids: [lastElement],
       });
 
-    numberWords = await wordsNumber();
+    numberWords = await helpersDictionary.wordsNumber();
     expect(numberWords[0].count).toEqual('3');
     expect(response.status).toEqual(200);
     expect(response.body).toHaveProperty('success');
+    done();
   });
 
-  test('200 withoutTranslation', async () => {
+  test('200 withoutTranslation', async done => {
     const response = await request(server)
       .post('/api/admin/deleteWords')
       .set('Cookie', [`${cookieAdmin}`])
@@ -121,13 +125,14 @@ describe('/api/admin/deleteWords', () => {
         withoutTranslation: true,
       });
 
-    numberWords = await wordsNumber();
+    numberWords = await helpersDictionary.wordsNumber();
     expect(numberWords[0].count).toEqual('2');
     expect(response.status).toEqual(200);
     expect(response.body).toHaveProperty('success');
+    done();
   });
 
-  test('400 protect words', async () => {
+  test('400 protect words', async done => {
     const response = await request(server)
       .post('/api/admin/deleteWords')
       .set('Cookie', [`${cookieAdmin}`])
@@ -135,9 +140,10 @@ describe('/api/admin/deleteWords', () => {
         counter: 1,
       });
 
-    numberWords = await wordsNumber();
+    numberWords = await helpersDictionary.wordsNumber();
     expect(numberWords[0].count).toEqual('2');
     expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty('errors');
+    done();
   });
 });
