@@ -20,6 +20,7 @@ async function login(password, email) {
       password: password,
       email: email,
     });
+
   return requestResult.headers['set-cookie'][0];
 }
 

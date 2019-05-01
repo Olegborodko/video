@@ -1,17 +1,13 @@
 const request = require('supertest');
 
 const server = require('../../../app');
-
 const helpersUser = require('../helpers/users');
 const helpersDictionary = require('../helpers/dictionary');
-
 const knex = require('../../../config/knex');
-
 const config = require('../../../config/config');
 
 let cookieAdmin;
 beforeAll(async done => {
-  await knex('dictionary').truncate();
   await knex('dictionary').insert([
     {
       en: 'hello',
@@ -38,19 +34,16 @@ beforeAll(async done => {
       protect: true,
     },
     {
-      en: 'i',
-      ru: 'я',
+      en: 'we',
+      ru: 'мы',
       counter: 1,
       protect: false,
     },
   ]);
 
-  await knex.raw('TRUNCATE TABLE users, users_video CASCADE');
-
-  cookieAdmin = await helpersUser.createUser(
+  cookieAdmin = await helpersUser.login(
     config.general.adminPassword,
     config.general.adminEmail,
-    config.general.adminName,
   );
 
   done();

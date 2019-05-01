@@ -9,6 +9,10 @@ const general = {
   adminEmail: process.env.ADMIN_EMAIL || 'admin@gmail.com',
   adminPassword: process.env.ADMIN_PASSWORD || 'adminadmin',
 
+  userTestName: 'userTest',
+  userTestEmail: 'userTest@gmail.com',
+  userTestPassword: 'userTest',
+
   jwtSecret: process.env.JWT_SECRET || 'test',
   saltRounds: process.env.SALT_ROUNDS || '10',
 
