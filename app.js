@@ -65,6 +65,7 @@ app.use(
       '/api/users/auth',
       '/api/video/getInfo',
       '/api/video/subtitlesToHash',
+      '/api/video/saveInfo',
     ],
   }),
 );
