@@ -27,12 +27,20 @@ router.post('/api/video/addToFavorites', async (ctx) => {
   const dataRequest = ctx.request.body;
 
   async function insertVideo(userId, videoId) {
-    const result = await knex('users_video')
-      .returning('id')
+    const ifExistRecord = await knex('users_video')
+      .where('user_id', userId)
+      .where('video_id', videoId);
+
+    if (ifExistRecord.length > 0) {
+      return false;
+    }
+
+    const insertResult = await knex('users_video')
       .insert({
         user_id: userId,
         video_id: videoId,
       })
+      .then(() => true)
       .catch((error) => {
         if (error.code === config.errors.db.noSuchRelation) {
           return false;
@@ -40,13 +48,13 @@ router.post('/api/video/addToFavorites', async (ctx) => {
         throw error;
       });
 
-    return result;
+    return insertResult;
   }
 
   const result = await insertVideo(userIdFromToken, dataRequest.video_id);
 
   if (!result) {
-    ctx.response.body = { errors: 'No such video id' };
+    ctx.response.body = { errors: 'Can not add video to favorites' };
     ctx.response.status = 400;
     return;
   }
