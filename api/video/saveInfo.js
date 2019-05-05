@@ -19,9 +19,9 @@ router.post('/api/video/saveInfo', async (ctx) => {
 
   const raw = await knex.raw(
     `
-    INSERT INTO video (video_id, title, description, thumbnails)
-    VALUES (:video_id, :title, :description, :thumbnails) 
-    ON CONFLICT (video_id) 
+    INSERT INTO video (video_identifier, title, description, thumbnails)
+    VALUES (:video_identifier, :title, :description, :thumbnails) 
+    ON CONFLICT (video_identifier) 
     DO UPDATE
      SET title = :title, 
      description = :description, 
@@ -29,7 +29,7 @@ router.post('/api/video/saveInfo', async (ctx) => {
      RETURNING id;
   `,
     {
-      video_id: requestData.video_id,
+      video_identifier: requestData.video_identifier,
       title: requestData.title,
       description: requestData.description,
       thumbnails: requestData.thumbnails,

@@ -36,7 +36,7 @@ router.post('/api/video/getInfo', async (ctx) => {
       && Object.prototype.hasOwnProperty.call(dataObject.items[0], 'id')
     ) {
       ctx.response.body = {
-        id: dataObject.items[0].id,
+        video_identifier: dataObject.items[0].id,
         title: dataObject.items[0].snippet.title,
         description: dataObject.items[0].snippet.description,
         thumbnails: dataObject.items[0].snippet.thumbnails.medium.url,

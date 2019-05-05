@@ -3,13 +3,13 @@ const combineRouters = require('koa-combine-routers');
 const getInfo = require('./getInfo');
 const subtitlesToHash = require('./subtitlesToHash');
 const saveInfo = require('./saveInfo');
-// const remove = require('./remove');
+const addToFavorites = require('./addToFavorites');
 
 const router = combineRouters(
   getInfo,
   subtitlesToHash,
   saveInfo,
-  // remove
+  addToFavorites,
 );
 
 module.exports = router;

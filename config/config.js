@@ -29,6 +29,7 @@ const general = {
 const errors = {
   db: {
     alreadyExist: '23505',
+    noSuchRelation: '23503',
   },
 };
 
