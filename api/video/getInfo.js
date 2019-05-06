@@ -15,7 +15,7 @@ router.post('/api/video/getInfo', async (ctx) => {
 
   if (errors) {
     ctx.response.body = { errors };
-    ctx.response.status = 404;
+    ctx.response.status = 400;
     return;
   }
 

@@ -25,8 +25,6 @@ router.post('/api/admin/getSubtitres', async (ctx) => {
     return;
   }
 
-  ctx.response.body = { errors: 'Can not find video in youtube' };
-
   const { id } = getVideoId(link);
   if (id) {
     const requestXML = await requestPromise(
@@ -41,10 +39,9 @@ router.post('/api/admin/getSubtitres', async (ctx) => {
       ctx.response.status = 200;
       return;
     }
-  } else {
-    ctx.response.body = { errors: 'English subtitres is not found' };
   }
 
+  ctx.response.body = { errors: 'Cannot find english subtitles' };
   ctx.response.status = 400;
 });
 

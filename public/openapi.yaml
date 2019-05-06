@@ -61,13 +61,7 @@ paths:
                 properties:
                   errors:
                     type: object
-                    properties:
-                      name: 
-                        type: object
-                      password:
-                        type: object
-                      email:
-                        type: object
+                    example: '...'
   
   /users/auth:
     post:
@@ -97,7 +91,7 @@ paths:
                   token_refresh:
                     type: string
                     example: eyJhb
-        '404':
+        '400':
           description: errors
           content:
             application/json:
@@ -106,21 +100,7 @@ paths:
                 properties:
                   errors:
                     type: object
-                    properties:
-                      password:
-                        type: object
-                      email:
-                        type: object
-        '400':
-          description: errors db
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  errors:
-                    type: string
-                    example: password or email are not correct
+                    example: '...'
   
   /users/logout:
     post:
@@ -139,7 +119,7 @@ paths:
                 properties:
                   success:
                     example: "logout"
-        '404':
+        '401':
           description: error
           content:
             application/json:
@@ -177,7 +157,7 @@ paths:
                   token_refresh:
                     type: string
                     example: eyJhb
-        '403':
+        '401':
           description: errors
           content:
             application/json:
@@ -209,7 +189,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  video_identifier:
                     example: "qANA6POtuFo"
                   title:
                     type: string
@@ -229,22 +209,13 @@ paths:
                 type: object
                 properties:
                   errors:
-                    example: "Can not find video in youtube"
-        '403':
-          description: errors
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  errors:
                     example: "..."
                     
   /video/subtitlesToHash:
     post:
       tags:
        - video
-      summary: get words and transcription
+      summary: get words and transcription from subtitles
       requestBody:
         content:
           application/json:
@@ -252,57 +223,22 @@ paths:
               type: object
               properties:
                 subtitles:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      text:
-                        type: string
-              example: {
-               "subtitles": [
-            {
-                "text": "Hello,   and &#39;thank&#39; you for, joining me for this\ntutorial."
-            },
-            {
-                "text": "My name is David from freelancerinsights.com."
-            },
-            {
-                "text": "In this video I will show you how to download\nsubtitles as text from YouTube."
-            },
-            {
-               
-                "text": "If you&#39;re pondering why you need to download\ntexts or subtitles from YouTube, it&#39;s probably"
-            },
-            {
-                "start": "19.77",
-                "dur": "5.11",
-                "text": "because maybe you have a video on YouTube\nthat is captioned and all you need is a transcript"
-            },
-            {
-               
-                "text": "for your own purposes, maybe to write a blog\npost or something of the sort."
-            },
-            {
-               
-                "text": "Number two, maybe you&#39;re a freelancer and\nyou just landed a contract or a job only to"
-            },
-            {
-                
-                "text": "realize the video already has captions."
-            },
-            {
-                
-                "text": "There is an advantage for doing this is that\nit makes work easier."
-            },
-            {
-               
-                "text": "The few disadvantages that are available is\nthat the text is not punctuated when you download"
-            },
-            {
-               
-                "text": "it from YouTube and number two, if the video\nwas auto-captioned by YouTube you need to"
-            }]
-              }
+                  type: object
+                  properties:
+                    text:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          start:
+                            type: string
+                            example: "0"
+                          dur:
+                            type: string
+                            example: "9.269"
+                          $t:
+                            type: string
+                            example: "Hello, and thank you for, joining me for this tutorial."
       responses:
         '200':
           description: success
@@ -321,7 +257,7 @@ paths:
                         example: false
                       word3:
                         type: string
-        '500':
+        '400':
           description: errors
           content:
             application/json:
@@ -329,7 +265,418 @@ paths:
                 type: object
                 properties:
                   errors:
-                    example: "something is wrong"
+                    example: "..."
+                    
+  /video/saveInfo:
+    post:
+      tags:
+       - video
+      summary: save information about video
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                video_identifier:
+                  type: string
+                  example: "qANA6POtuFo"
+                title:
+                  type: string
+                  example: "test"
+                description:
+                  type: string
+                  example: "test"
+                thumbnails:
+                  type: string
+                  example: "https://i.ytimg.com/vi/-8b_xY8tpQQ/mqdefault.jpg"  
+                  
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    example: 4
+        '400':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "..."
+                    
+  /video/addToFavorites:
+    post:
+      tags:
+       - video
+      security:
+        - cookieAuth: [] 
+      summary: add video to favorites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                video_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "..."
+        '401':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "Access not allowed"
+                    
+  /video/removeFromFavorites:
+    post:
+      tags:
+       - video
+      security:
+        - cookieAuth: [] 
+      summary: remove video from favorites
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                video_id:
+                  type: integer
+                  example: 1
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+        '400':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "..."
+        '401':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    example: "Access not allowed"
+                    
+  /admin/getWords:
+    post:
+      tags:
+      - admin
+      security:
+        - cookieAuth: []
+      summary: get words from dictionary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                counter:
+                  type: integer
+                  example: 1
+                page:
+                  type: integer
+                  example: 1
+                withoutTranslation:
+                  type: boolean
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      last_page:
+                        type: integer
+                      per_page:
+                        type: integer
+                      current_page:
+                        type: integer
+                      from:
+                        type: integer
+                      to:
+                        type: integer
+                      counterMin:
+                        type: integer
+                      counterMax:
+                        type: integer
+                      data: 
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id: 
+                              type: integer
+                            en:
+                              type: string
+                            ru:
+                              type: string
+                            counter:
+                              type: integer
+                            protect:
+                              type: boolean
+        '401':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors: 
+                    type: string
+                    example: Access not allowed
+        '403':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object
+                    
+  /admin/getSubtitles:
+    post:
+      tags:
+      - admin
+      security:
+        - cookieAuth: []
+      summary: get subtitles from video
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                link:
+                  type: string
+                  example: https://www.youtube.com/watch?v=Ncw-XN7MIws
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  subtitles:
+                    type: object
+                    properties:
+                      text:
+                       type: array
+                       items: 
+                        type: object
+                        properties:
+                          start: 
+                            type: string
+                            example: "0"
+                          dur:
+                            type: string
+                            example: "9.269"
+                          $t:
+                            type: string
+                            example: "hello yeah say something back to me\nhello ah okay now in this video"
+        '401':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors: 
+                    type: string
+                    example: Access not allowed
+        '403':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object                    
+                    
+  /admin/changeWord:
+    post:
+      tags:
+      - admin
+      security:
+        - cookieAuth: []
+      summary: change word in dictionary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer  
+                  example: 123
+                counter:
+                  type: integer  
+                  example: 3
+                en: 
+                  type: string
+                  example: "hello"
+                ru: 
+                  type: string
+                  example: "привет"
+                protect:
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                     type: integer
+                     example: 1
+        '401':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors: 
+                    type: string
+                    example: Access not allowed
+        '403':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object                                      
+                    
+  /admin/deleteWords:
+    post:
+      tags:
+      - admin
+      security:
+        - cookieAuth: []
+      summary: delete words from dictionary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                counter:
+                  type: integer  
+                  example: 3
+                ids: 
+                  type: array
+                  items:
+                    type: integer
+                  example: [1, 2, 3]
+                withoutTranslation: 
+                  type: boolean
+                  example: true
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: array
+                    items:
+                     type: integer
+                     example: [1, 2, 3]
+        '401':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors: 
+                    type: string
+                    example: Access not allowed
+        '403':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: object     
+        '400':
+          description: errors
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    example: 'Nothing found'
+              
+      
                       
                   
                   

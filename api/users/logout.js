@@ -21,7 +21,7 @@ router.post('/api/users/logout', async (ctx) => {
   }
 
   ctx.response.body = { errors: 'invalid access' };
-  ctx.response.status = 404;
+  ctx.response.status = 401;
 });
 
 module.exports = router;

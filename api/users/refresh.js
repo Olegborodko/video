@@ -41,7 +41,7 @@ router.post('/api/users/refresh', async (ctx) => {
   }
 
   ctx.response.body = { errors: 'invalid access' };
-  ctx.response.status = 403;
+  ctx.response.status = 401;
 });
 
 module.exports = router;

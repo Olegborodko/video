@@ -41,7 +41,7 @@ router.post('/api/video/saveInfo', async (ctx) => {
     && raw.rows.length > 0
     && Object.prototype.hasOwnProperty.call(raw.rows[0], 'id')
   ) {
-    ctx.response.body = { success: raw.rows[0].id };
+    ctx.response.body = { id: raw.rows[0].id };
     ctx.response.status = 200;
   } else {
     ctx.response.body = { errors: 'db error' };
