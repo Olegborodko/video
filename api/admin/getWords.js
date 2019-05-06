@@ -44,6 +44,10 @@ router.post('/api/admin/getWords', async (ctx) => {
     }
   }
 
+  if (Object.prototype.hasOwnProperty.call(data, 'protect')) {
+    resultRequest = resultRequest.where('protect', data.protect);
+  }
+
   const result = await resultRequest.paginate(10, data.page, true);
 
   const getCounter = await knex('dictionary')

@@ -425,6 +425,8 @@ paths:
                   example: 1
                 withoutTranslation:
                   type: boolean
+                protect:
+                  type: boolean
       responses:
         '200':
           description: success
