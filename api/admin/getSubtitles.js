@@ -8,7 +8,7 @@ const videoLinkSchema = require('../joiHelpers/schemes/videoLink');
 const runValidation = require('../joiHelpers/runValidation');
 const currentUserIsAdmin = require('./helpers/ifAdmin');
 
-router.post('/api/admin/getSubtitres', async (ctx) => {
+router.post('/api/admin/getSubtitles', async (ctx) => {
   if (!(await currentUserIsAdmin(ctx.cookies.get('token_access')))) {
     ctx.response.body = { errors: 'Access not allowed' };
     ctx.response.status = 401;
