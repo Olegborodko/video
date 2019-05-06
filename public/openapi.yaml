@@ -6,7 +6,7 @@ info:
 servers:
   - url: http://localhost:3000/api
     description: local
-  - url: https://topvideoplayer.herokuapp.com/api
+  - url: https://videoplayerlatest.herokuapp.com/api
     description: remote
 
 # components:
