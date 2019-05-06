@@ -3,6 +3,7 @@ const Router = require('koa-router');
 const router = new Router();
 
 const knex = require('../../config/knex');
+const config = require('../../config/config');
 
 const changeWordSchema = require('../joiHelpers/schemes/admin/changeWord.js');
 const runValidation = require('../joiHelpers/runValidation');
@@ -19,7 +20,7 @@ router.post('/api/admin/changeWord', async (ctx) => {
 
   if (errors) {
     ctx.response.body = { errors };
-    ctx.response.status = 403;
+    ctx.response.status = 400;
     return;
   }
 
@@ -29,7 +30,19 @@ router.post('/api/admin/changeWord', async (ctx) => {
   const success = await knex('dictionary')
     .returning('id')
     .where('id', data.id)
-    .update(data);
+    .update(data)
+    .catch((error) => {
+      if (error.code === config.errors.db.alreadyExist) {
+        return false;
+      }
+      throw error;
+    });
+
+  if (!success) {
+    ctx.response.body = { errors: 'Error - duplicate key' };
+    ctx.response.status = 400;
+    return;
+  }
 
   if (success.length === 0) {
     ctx.response.body = { errors: 'Nothing found' };

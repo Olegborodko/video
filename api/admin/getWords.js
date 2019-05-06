@@ -23,7 +23,7 @@ router.post('/api/admin/getWords', async (ctx) => {
 
   if (errors) {
     ctx.response.body = { errors };
-    ctx.response.status = 403;
+    ctx.response.status = 400;
     return;
   }
 

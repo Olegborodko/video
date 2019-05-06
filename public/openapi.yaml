@@ -477,7 +477,7 @@ paths:
                   errors: 
                     type: string
                     example: Access not allowed
-        '403':
+        '400':
           description: errors
           content:
             application/json:
@@ -538,7 +538,7 @@ paths:
                   errors: 
                     type: string
                     example: Access not allowed
-        '403':
+        '400':
           description: errors
           content:
             application/json:
@@ -599,7 +599,7 @@ paths:
                   errors: 
                     type: string
                     example: Access not allowed
-        '403':
+        '400':
           description: errors
           content:
             application/json:
@@ -656,15 +656,6 @@ paths:
                   errors: 
                     type: string
                     example: Access not allowed
-        '403':
-          description: errors
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  errors:
-                    type: object     
         '400':
           description: errors
           content:
@@ -673,12 +664,4 @@ paths:
                 type: object
                 properties:
                   errors:
-                    type: string
-                    example: 'Nothing found'
-              
-      
-                      
-                  
-                  
-  
-  
+                    type: object

@@ -7,8 +7,8 @@ const subtitlesSchema = Joi.object().keys({
         .items(
           Joi.object().keys({
             $t: Joi.string().required(),
-            start: Joi.string(),
-            dur: Joi.string(),
+            start: Joi.string().allow(''),
+            dur: Joi.string().allow(''),
           }),
         )
         .required(),
