@@ -22,8 +22,8 @@ const general = {
   translateFrom: '1033',
   translateTo: '1049',
 
-  tokenAccessTime: '30m',
-  tokenRefreshTime: '30d',
+  tokenAccessTime: process.env.TOKEN_ACCESS_TIME || '30m',
+  tokenRefreshTime: process.env.TOKEN_REFRESH_TIME || '30d',
 };
 
 const errors = {
