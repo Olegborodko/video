@@ -10,8 +10,16 @@ const cors = require('koa2-cors');
 const serve = require('koa-static');
 const config = require('./config/config');
 
-// const fs = require('fs');
-// const https = require('https');
+const redisModule = require('./config/redis');
+
+redisModule.resetData().then(() => {
+  redisModule.fillDB().then();
+});
+
+// redisInitial.initial();
+// redisInitial.client.hgetall("words", function (err, replies) {
+//      console.log(replies['test 1']);
+// });
 
 const usersRoutes = require('./api/users');
 const videoRoutes = require('./api/video');

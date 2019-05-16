@@ -7,6 +7,7 @@ const subtitlesSchema = require('../joiHelpers/schemes/subtitles');
 const runValidation = require('../joiHelpers/runValidation');
 
 const translateApi = require('./helpers/translateApi');
+const redisModule = require('../../config/redis');
 
 router.post('/api/video/subtitlesToHash', async (ctx) => {
   const { subtitles } = ctx.request.body;
@@ -36,22 +37,28 @@ router.post('/api/video/subtitlesToHash', async (ctx) => {
   const wordsObject = {};
   const allWordsFromDb = [];
 
+  const wordsInDictionary = await redisModule.getAsync('words').then((res) => {
+    if (res) {
+      return res;
+    }
+    return false;
+  });
+
   async function wordsFromDbOrTanslate(token, correctWord) {
-    return knex('dictionary')
-      .increment('counter')
-      .where('en', correctWord)
-      .returning('*')
-      .then((data) => {
-        if (data.length > 0) {
-          wordsObject[correctWord] = data[0].ru;
-          return true;
-        }
-        // translate word throught api
-        return translateApi.translateAndSave(token, correctWord).then((res) => {
-          wordsObject[correctWord] = res;
-          return true;
-        });
-      });
+    if (Object.prototype.hasOwnProperty.call(wordsInDictionary, correctWord)) {
+      wordsObject[correctWord] = wordsInDictionary[correctWord];
+
+      knex('dictionary')
+        .increment('counter')
+        .where('en', correctWord)
+        .then();
+
+      return true;
+    }
+    return translateApi.translateAndSave(token, correctWord).then((res) => {
+      wordsObject[correctWord] = res;
+      return true;
+    });
   }
 
   const token = await translateApi.getCorrectToken();

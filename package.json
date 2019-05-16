@@ -56,6 +56,7 @@
     "koa2-cors": "^2.0.6",
     "koa2-swagger-ui": "^2.13.0",
     "pg": "^7.8.0",
+    "redis": "^2.8.0",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "uuid": "^3.3.2",

@@ -2,6 +2,7 @@ const fs = require('fs');
 const requestPromise = require('request-promise');
 const config = require('../../../config/config');
 const knex = require('../../../config/knex');
+const redisModule = require('../../../config/redis');
 
 async function getTokenFromLingvo() {
   const options = {
@@ -77,21 +78,21 @@ async function refreshToken() {
   return false;
 }
 
-async function testTranslate(token) {
-  const russianWord = await translate(token, 'a');
+// async function testTranslate(token) {
+//   const russianWord = await translate(token, 'a');
 
-  if (russianWord) {
-    return token;
-  }
+//   if (russianWord) {
+//     return token;
+//   }
 
-  const newToken = await getTokenFromLingvo();
+//   const newToken = await getTokenFromLingvo();
 
-  if (newToken) {
-    return newToken;
-  }
+//   if (newToken) {
+//     return newToken;
+//   }
 
-  return false;
-}
+//   return false;
+// }
 
 async function saveWordToDb(dataForInsert) {
   const result = await knex('dictionary')
@@ -115,7 +116,7 @@ async function getCorrectToken() {
     token = await refreshToken();
   }
 
-  token = await testTranslate(token);
+  // token = await testTranslate(token);
 
   if (token) {
     return token;
@@ -138,7 +139,8 @@ async function translateAndSave(token, enWord) {
     data.ru = '';
   }
 
-  await saveWordToDb(data);
+  redisModule.client.hmset('words', enWord, data.ru);
+  saveWordToDb(data);
 
   return data.ru;
 }

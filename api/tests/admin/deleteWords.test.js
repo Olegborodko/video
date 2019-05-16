@@ -64,13 +64,13 @@ describe('/api/admin/deleteWords', () => {
     done();
   });
 
-  test('403 errors without params', async done => {
+  test('400 errors without params', async done => {
     const response = await request(server)
       .post('/api/admin/deleteWords')
       .set('Cookie', [`${cookieAdmin}`])
       .send();
 
-    expect(response.status).toEqual(403);
+    expect(response.status).toEqual(400);
     expect(response.body).toHaveProperty('errors');
     done();
   });
