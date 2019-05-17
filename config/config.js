@@ -24,6 +24,8 @@ const general = {
 
   tokenAccessTime: process.env.TOKEN_ACCESS_TIME || '30m',
   tokenRefreshTime: process.env.TOKEN_REFRESH_TIME || '30d',
+
+  redisURL: process.env.REDIS_URL,
 };
 
 const errors = {

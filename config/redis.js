@@ -1,7 +1,11 @@
 const redis = require('redis');
 const { promisify } = require('util');
+const config = require('./config');
 
-const client = redis.createClient();
+let client = redis.createClient();
+if (config.general.nodeEnv === 'production') {
+  client = redis.createClient(config.general.redisURL);
+}
 
 const getAsync = promisify(client.hgetall).bind(client);
 const resetData = promisify(client.flushdb).bind(client);
