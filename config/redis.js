@@ -2,9 +2,11 @@ const redis = require('redis');
 const { promisify } = require('util');
 const config = require('./config');
 
-let client = redis.createClient();
+let client;
 if (config.general.nodeEnv === 'production') {
   client = redis.createClient(config.general.redisURL);
+} else {
+  client = redis.createClient();
 }
 
 const getAsync = promisify(client.hgetall).bind(client);
