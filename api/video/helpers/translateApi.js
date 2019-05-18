@@ -33,6 +33,7 @@ async function translate(token, text) {
   const options = {
     uri: 'https://developers.lingvolive.com/api/v1/Minicard',
     method: 'GET',
+    resolveWithFullResponse: true,
     simple: false,
     qs: {
       text,
@@ -45,15 +46,25 @@ async function translate(token, text) {
     json: true,
   };
   const result = await requestPromise(options).then((data) => {
-    if (data && data.Translation && data.Translation.Translation) {
+    console.log(data);
+    if (data.statusCode === 401) {
+      return '401';
+    }
+    if (
+      data
+      && data.body
+      && data.body.Translation
+      && data.body.Translation.Translation
+    ) {
       return {
-        ru: data.Translation.Translation,
+        ru: data.body.Translation.Translation,
         en: text,
       };
     }
     return false;
   });
 
+  console.log(result);
   return result;
 }
 
@@ -116,8 +127,6 @@ async function getCorrectToken() {
     token = await refreshToken();
   }
 
-  // token = await testTranslate(token);
-
   if (token) {
     return token;
   }
@@ -132,6 +141,10 @@ async function translateAndSave(token, enWord) {
     en: enWord,
     counter: 1,
   };
+
+  if (translateResult === '401') {
+    return '';
+  }
 
   if (translateResult) {
     data.ru = translateResult.ru;
@@ -151,7 +164,7 @@ async function translateAndSave(token, enWord) {
 // module.exports.setTokenToFile = setTokenToFile;
 // module.exports.saveWordToDb = saveWordToDb;
 // module.exports.testTranslate = testTranslate;
-// module.exports.refreshToken = refreshToken;
+module.exports.refreshToken = refreshToken;
 
 module.exports.getCorrectToken = getCorrectToken;
 module.exports.translateAndSave = translateAndSave;

@@ -11,6 +11,9 @@ const serve = require('koa-static');
 const config = require('./config/config');
 
 const redisModule = require('./config/redis');
+const cron = require('./config/cron');
+
+cron();
 
 redisModule.resetData().then(() => {
   redisModule.fillDB().then();
