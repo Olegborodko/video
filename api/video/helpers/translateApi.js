@@ -46,7 +46,6 @@ async function translate(token, text) {
     json: true,
   };
   const result = await requestPromise(options).then((data) => {
-    console.log(data);
     if (data.statusCode === 401) {
       return '401';
     }
@@ -64,7 +63,6 @@ async function translate(token, text) {
     return false;
   });
 
-  console.log(result);
   return result;
 }
 

@@ -9,6 +9,8 @@ const changeWordSchema = require('../joiHelpers/schemes/admin/changeWord.js');
 const runValidation = require('../joiHelpers/runValidation');
 const currentUserIsAdmin = require('./helpers/ifAdmin');
 
+const redisModule = require('../../config/redis');
+
 router.post('/api/admin/changeWord', async (ctx) => {
   if (!(await currentUserIsAdmin(ctx.cookies.get('token_access')))) {
     ctx.response.body = { errors: 'Access not allowed' };
@@ -49,6 +51,8 @@ router.post('/api/admin/changeWord', async (ctx) => {
     ctx.response.status = 400;
     return;
   }
+
+  redisModule.client.hmset('words', data.en, data.ru);
 
   ctx.response.body = { success };
   ctx.response.status = 200;
