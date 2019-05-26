@@ -6,7 +6,10 @@ let client;
 if (config.general.nodeEnv === 'production') {
   client = redis.createClient(config.general.redisURL);
 } else {
-  client = redis.createClient();
+  client = redis.createClient({
+    host: config.general.redisHOST,
+    port: config.general.redisPORT,
+  });
 }
 
 const getAsync = promisify(client.hgetall).bind(client);

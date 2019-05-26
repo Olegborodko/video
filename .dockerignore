@@ -1,0 +1,14 @@
+/temp/*
+
+.git
+Dockerfile
+.gitignore
+README.md
+.env*
+.eslintignore
+.eslintrc.json
+.prettierignore
+.prettierrc
+wallaby.conf.js
+docker-compose.yml
+.dockerignore

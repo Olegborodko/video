@@ -1,0 +1,30 @@
+version: '3'
+services:
+  app:
+    build: .
+    ports:
+     - '3000:3000'
+    networks: 
+     - webnet 
+    links:
+     - redis
+    depends_on:
+     - redis
+     - db
+    environment:
+      REDIS_HOST: redis
+      HOST_DB: db
+  redis:
+    image: redis:alpine
+    networks: 
+     - webnet
+  db:
+    image: postgres
+    networks: 
+      - webnet
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: videoplayer
+networks:
+  webnet:

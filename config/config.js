@@ -26,6 +26,8 @@ const general = {
   tokenRefreshTime: process.env.TOKEN_REFRESH_TIME || '30d',
 
   redisURL: process.env.REDIS_URL,
+  redisHOST: process.env.REDIS_HOST || '127.0.0.1',
+  redisPORT: process.env.REDIS_PORT || 6379,
 };
 
 const errors = {
@@ -38,9 +40,10 @@ const errors = {
 const development = {
   general,
   errors,
-  db: 'videoplayer',
-  user: 'postgres',
-  password: 'postgres',
+  db: process.env.POSTGRES_DB || 'videoplayer',
+  user: process.env.POSTGRES_USER || 'postgres',
+  password: process.env.POSTGRES_PASSWORD || 'postgres',
+  hostDb: process.env.HOST_DB || 'localhost',
   host: 'localhost',
   port: '3000',
 };
